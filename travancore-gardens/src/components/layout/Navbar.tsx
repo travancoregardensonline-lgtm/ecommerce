@@ -20,7 +20,7 @@ const navLinks = [
 export function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
-    const { getTotalItems } = useCartStore();
+    const { items: cartItems, getTotalItems } = useCartStore();
     const { items: wishlistItems } = useWishlistStore();
 
     // Avoid SSR / client hydration mismatch — cart state lives in localStorage
@@ -30,7 +30,7 @@ export function Navbar() {
     useEffect(() => {
         setCartCount(getTotalItems());
         setWishlistCount(wishlistItems.length);
-    }, [getTotalItems, wishlistItems.length]);
+    }, [cartItems, wishlistItems, getTotalItems]);
 
     return (
         <header className="sticky top-0 z-50 w-full">
