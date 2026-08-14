@@ -2,6 +2,9 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { useAuthStore } from "@/store/authStore";
+import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
+import { syncCartAndWishlistOnLogin } from "@/lib/sync";
 import { useEffect } from "react";
 
 /**
@@ -18,12 +21,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
             setIsLoading(false);
+            if (session?.user) {
+                syncCartAndWishlistOnLogin(session.user.id);
+            }
         });
 
         // Listen for auth state changes
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
             setSession(session);
             setIsLoading(false);
+            
+            if (event === 'SIGNED_IN' && session?.user) {
+                syncCartAndWishlistOnLogin(session.user.id);
+            } else if (event === 'SIGNED_OUT') {
+                useCartStore.getState().setCartId(null);
+                useWishlistStore.getState().setWishlistId(null);
+            }
         });
 
         return () => subscription.unsubscribe();

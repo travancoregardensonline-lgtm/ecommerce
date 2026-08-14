@@ -145,9 +145,25 @@ create index idx_cart_user on carts(user_id);
 create table if not exists cart_items (
 id uuid primary key default uuid_generate_v4(),
 cart_id uuid references carts(id) on delete cascade,
-product_id uuid references products(id),
-variant_id uuid references product_variants(id),
+product_id uuid references products(id) on delete cascade,
+variant_id uuid references product_variants(id) on delete set null,
 quantity integer default 1,
+created_at timestamptz default now()
+);
+
+-- WISHLISTS
+create table if not exists wishlists (
+id uuid primary key default uuid_generate_v4(),
+user_id uuid references profiles(id) on delete cascade,
+created_at timestamptz default now()
+);
+create index idx_wishlist_user on wishlists(user_id);
+
+-- WISHLIST ITEMS
+create table if not exists wishlist_items (
+id uuid primary key default uuid_generate_v4(),
+wishlist_id uuid references wishlists(id) on delete cascade,
+product_id uuid references products(id) on delete cascade,
 created_at timestamptz default now()
 );
 
@@ -257,7 +273,11 @@ created_at timestamptz default now()
 
 alter table profiles enable row level security;
 alter table addresses enable row level security;
+alter table product_variants enable row level security;
 alter table carts enable row level security;
+alter table cart_items enable row level security;
+alter table wishlists enable row level security;
+alter table wishlist_items enable row level security;
 
 -- Example policy
 create policy "Users can view own profile"

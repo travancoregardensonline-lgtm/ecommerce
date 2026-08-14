@@ -179,6 +179,11 @@ export default function CheckoutPage() {
         if (!user) { toast.error("Please verify your phone number to continue."); return; }
         if (!items.length) return;
 
+        if (addresses && (addresses as any[]).length > 0 && !selectedAddressId) {
+            toast.error("Please select a shipping address.");
+            return;
+        }
+
         setIsPlacing(true);
         const supabase = createClient();
 

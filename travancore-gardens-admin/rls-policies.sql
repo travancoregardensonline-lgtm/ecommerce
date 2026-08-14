@@ -111,6 +111,21 @@ CREATE POLICY "cart_items_own" ON public.cart_items FOR ALL
     USING (EXISTS (SELECT 1 FROM public.carts WHERE id = cart_items.cart_id AND user_id = auth.uid()));
 CREATE POLICY "cart_items_admin" ON public.cart_items FOR ALL USING (public.is_admin());
 
+-- WISHLISTS
+ALTER TABLE public.wishlists ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "wishlists_own"   ON public.wishlists;
+DROP POLICY IF EXISTS "wishlists_admin" ON public.wishlists;
+CREATE POLICY "wishlists_own"   ON public.wishlists FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "wishlists_admin" ON public.wishlists FOR ALL USING (public.is_admin());
+
+-- WISHLIST ITEMS
+ALTER TABLE public.wishlist_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "wishlist_items_own"   ON public.wishlist_items;
+DROP POLICY IF EXISTS "wishlist_items_admin" ON public.wishlist_items;
+CREATE POLICY "wishlist_items_own" ON public.wishlist_items FOR ALL
+    USING (EXISTS (SELECT 1 FROM public.wishlists WHERE id = wishlist_items.wishlist_id AND user_id = auth.uid()));
+CREATE POLICY "wishlist_items_admin" ON public.wishlist_items FOR ALL USING (public.is_admin());
+
 -- ============================================================
 -- ORDERS — users see own orders, admins see all
 -- ============================================================
@@ -130,10 +145,13 @@ CREATE POLICY "orders_admin_all" ON public.orders FOR ALL   USING (public.is_adm
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "order_items_own"   ON public.order_items;
+DROP POLICY IF EXISTS "order_items_insert_own" ON public.order_items;
 DROP POLICY IF EXISTS "order_items_admin" ON public.order_items;
 
 CREATE POLICY "order_items_own" ON public.order_items FOR SELECT
     USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_items.order_id AND user_id = auth.uid()) OR public.is_admin());
+CREATE POLICY "order_items_insert_own" ON public.order_items FOR INSERT 
+    WITH CHECK (EXISTS (SELECT 1 FROM public.orders WHERE id = order_items.order_id AND user_id = auth.uid()) OR public.is_admin());
 CREATE POLICY "order_items_admin" ON public.order_items FOR ALL USING (public.is_admin());
 
 -- ============================================================

@@ -161,6 +161,22 @@ create table if not exists public.cart_items (
   created_at timestamptz default now()
 );
 
+-- WISHLISTS
+create table if not exists public.wishlists (
+  id uuid primary key default uuid_generate_v4(),
+  user_id uuid references public.profiles(id) on delete cascade,
+  created_at timestamptz default now()
+);
+create index if not exists idx_wishlist_user on public.wishlists(user_id);
+
+-- WISHLIST ITEMS
+create table if not exists public.wishlist_items (
+  id uuid primary key default uuid_generate_v4(),
+  wishlist_id uuid references public.wishlists(id) on delete cascade,
+  product_id uuid references public.products(id) on delete cascade,
+  created_at timestamptz default now()
+);
+
 -- COUPONS
 create table if not exists public.coupons (
   id uuid primary key default uuid_generate_v4(),
@@ -368,6 +384,8 @@ ALTER TABLE public.product_images ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.product_variants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.carts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.cart_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wishlists ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.wishlist_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.order_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payments ENABLE ROW LEVEL SECURITY;
@@ -442,6 +460,19 @@ CREATE POLICY "cart_items_own" ON public.cart_items FOR ALL
     USING (EXISTS (SELECT 1 FROM public.carts WHERE id = cart_items.cart_id AND user_id = auth.uid()));
 CREATE POLICY "cart_items_admin" ON public.cart_items FOR ALL USING (public.is_admin());
 
+-- Wishlists Policies
+DROP POLICY IF EXISTS "wishlists_own"   ON public.wishlists;
+DROP POLICY IF EXISTS "wishlists_admin" ON public.wishlists;
+CREATE POLICY "wishlists_own"   ON public.wishlists FOR ALL USING (auth.uid() = user_id);
+CREATE POLICY "wishlists_admin" ON public.wishlists FOR ALL USING (public.is_admin());
+
+-- Wishlist Items Policies
+DROP POLICY IF EXISTS "wishlist_items_own"   ON public.wishlist_items;
+DROP POLICY IF EXISTS "wishlist_items_admin" ON public.wishlist_items;
+CREATE POLICY "wishlist_items_own" ON public.wishlist_items FOR ALL
+    USING (EXISTS (SELECT 1 FROM public.wishlists WHERE id = wishlist_items.wishlist_id AND user_id = auth.uid()));
+CREATE POLICY "wishlist_items_admin" ON public.wishlist_items FOR ALL USING (public.is_admin());
+
 -- Orders Policies
 DROP POLICY IF EXISTS "orders_own"          ON public.orders;
 DROP POLICY IF EXISTS "orders_admin_all"    ON public.orders;
@@ -457,6 +488,8 @@ DROP POLICY IF EXISTS "order_items_admin" ON public.order_items;
 
 CREATE POLICY "order_items_own" ON public.order_items FOR SELECT
     USING (EXISTS (SELECT 1 FROM public.orders WHERE id = order_items.order_id AND user_id = auth.uid()) OR public.is_admin());
+CREATE POLICY "order_items_insert_own" ON public.order_items FOR INSERT 
+    WITH CHECK (EXISTS (SELECT 1 FROM public.orders WHERE id = order_items.order_id AND user_id = auth.uid()) OR public.is_admin());
 CREATE POLICY "order_items_admin" ON public.order_items FOR ALL USING (public.is_admin());
 
 -- Payments Policies
