@@ -1,6 +1,14 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Product } from '@/components/store/ProductCard'
+export interface Product {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    salePrice?: number | null;
+    imageUrl: string;
+    category?: string;
+}
 
 interface WishlistStore {
     items: Product[]
