@@ -91,7 +91,7 @@ export const authActions = {
 /**
  * Create a user profile row on first sign-in.
  */
-export async function ensureProfile(userId: string, identifier: string): Promise<void> {
+export async function ensureProfile(userId: string, identifier: string, name?: string): Promise<void> {
     const supabase = createClient();
 
     const { data: existing } = await supabase
@@ -105,7 +105,7 @@ export async function ensureProfile(userId: string, identifier: string): Promise
         await supabase.from("profiles").insert({
             id: userId,
             ...(isEmail ? {} : { phone: identifier }),
+            ...(name ? { name } : {}),
         });
     }
 }
-

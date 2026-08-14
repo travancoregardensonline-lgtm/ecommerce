@@ -13,6 +13,8 @@ import { useMyProfile, useMyAddresses } from "@/hooks/useSupabase";
 import { useAuthStore } from "@/store/authStore";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { authActions, ensureProfile } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 export default function CheckoutPage() {
@@ -26,6 +28,13 @@ export default function CheckoutPage() {
     const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
     const [isPlacing, setIsPlacing] = useState(false);
     const [orderError, setOrderError] = useState<string | null>(null);
+
+    // OTP / Auth states for guests
+    const [authStep, setAuthStep] = useState<"details" | "otp">("details");
+    const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+    const [authLoading, setAuthLoading] = useState(false);
+    const [authError, setAuthError] = useState<string | null>(null);
+
 
     // Coupon states
     const [couponCode, setCouponCode] = useState("");
@@ -55,6 +64,62 @@ export default function CheckoutPage() {
     const total = Math.max(0, subtotal + shipping - discount);
 
     // Handlers
+    
+    const handleSendOTP = async () => {
+        if (!form.phone || form.phone.length !== 10) {
+            setAuthError("Please enter a valid 10-digit mobile number.");
+            return;
+        }
+        setAuthLoading(true);
+        setAuthError(null);
+        const result = await authActions.sendPhoneOTP(form.phone);
+        setAuthLoading(false);
+        if (result.error) {
+            setAuthError(result.error.message ?? "Failed to send OTP.");
+            return;
+        }
+        setAuthStep("otp");
+    };
+
+    const handleVerifyOTP = async () => {
+        const token = otp.join("");
+        if (token.length !== 6) {
+            setAuthError("Please enter all 6 digits.");
+            return;
+        }
+        setAuthLoading(true);
+        setAuthError(null);
+        const result = await authActions.verifyPhoneOTP(form.phone, token);
+        setAuthLoading(false);
+        if (result.error) {
+            setAuthError("Invalid or expired OTP.");
+            return;
+        }
+        
+        const currentUser = await authActions.getCurrentUser();
+        if (currentUser) {
+            await ensureProfile(currentUser.id, form.phone, form.full_name);
+            setAuthStep("details");
+            toast.success("Successfully logged in!");
+        }
+    };
+
+    const handleOtpChange = (index: number, value: string) => {
+        if (value.length > 1) return;
+        const next = [...otp];
+        next[index] = value;
+        setOtp(next);
+        if (value && index < 5) {
+            document.getElementById(`checkout-otp-${index + 1}`)?.focus();
+        }
+    };
+
+    const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
+        if (e.key === "Backspace" && !otp[index] && index > 0) {
+            document.getElementById(`checkout-otp-${index - 1}`)?.focus();
+        }
+    };
+
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) return;
         setCouponLoading(true);
@@ -111,7 +176,7 @@ export default function CheckoutPage() {
     const handlePlaceOrder = async (e: React.FormEvent) => {
         e.preventDefault();
         setOrderError(null);
-        if (!user) { router.push("/login"); return; }
+        if (!user) { toast.error("Please verify your phone number to continue."); return; }
         if (!items.length) return;
 
         setIsPlacing(true);
@@ -259,34 +324,117 @@ export default function CheckoutPage() {
                                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                                     <User className="h-4 w-4 text-primary" />
                                 </div>
-                                <h2 className="text-xl font-semibold">Contact Information</h2>
+                                <h2 className="text-xl font-semibold">{!user ? "Sign In to Checkout" : "Contact Information"}</h2>
                             </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label>Full Name</Label>
-                                    <Input
-                                        value={form.full_name || profile?.name || ""}
-                                        onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
-                                        placeholder="Your full name" required
-                                    />
+                            
+                            {!user ? (
+                                <div className="space-y-6">
+                                    {authError && (
+                                        <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
+                                            {authError}
+                                        </div>
+                                    )}
+                                    {authStep === "details" ? (
+                                        <>
+                                            <div className="space-y-4">
+                                                <div className="space-y-2">
+                                                    <Label>Mobile Number</Label>
+                                                    <div className="flex">
+                                                        <span className="inline-flex items-center px-4 border border-r-0 rounded-l-md bg-muted text-muted-foreground text-sm font-medium border-input">
+                                                            +91
+                                                        </span>
+                                                        <Input
+                                                            type="tel"
+                                                            value={form.phone}
+                                                            onChange={e => setForm(f => ({ ...f, phone: e.target.value.replace(/\D/g, "").slice(0, 10) }))}
+                                                            placeholder="98765 43210"
+                                                            className="rounded-l-none"
+                                                            maxLength={10}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Full Name (if new)</Label>
+                                                    <Input
+                                                        value={form.full_name}
+                                                        onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
+                                                        placeholder="Your full name"
+                                                    />
+                                                </div>
+                                            </div>
+                                            <Button type="button" onClick={handleSendOTP} disabled={authLoading || form.phone.length !== 10} className="w-full">
+                                                {authLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                Verify Phone to Continue
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <div className="space-y-6">
+                                            <div className="space-y-3">
+                                                <Label className="text-center block">Enter 6-Digit OTP</Label>
+                                                <div className="flex gap-2 justify-center">
+                                                    {otp.map((digit, i) => (
+                                                        <input
+                                                            key={i}
+                                                            id={`checkout-otp-${i}`}
+                                                            type="text"
+                                                            inputMode="numeric"
+                                                            pattern="[0-9]"
+                                                            maxLength={1}
+                                                            value={digit}
+                                                            onChange={(e) => handleOtpChange(i, e.target.value)}
+                                                            onKeyDown={(e) => handleOtpKeyDown(i, e)}
+                                                            className={cn(
+                                                                "h-12 w-10 sm:w-12 text-center text-xl font-bold border rounded-lg bg-background",
+                                                                "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
+                                                                digit ? "border-primary" : "border-input"
+                                                            )}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <p className="text-xs text-center text-muted-foreground">Sent to +91 {form.phone}</p>
+                                            </div>
+                                            <div className="flex flex-col gap-3">
+                                                <Button type="button" onClick={handleVerifyOTP} disabled={authLoading} className="w-full">
+                                                    {authLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                    Verify & Continue
+                                                </Button>
+                                                <button type="button" onClick={() => {setAuthStep("details"); setOtp(["","","","","",""]);}} className="text-sm text-muted-foreground hover:text-foreground">
+                                                    Change phone number
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label>Email</Label>
-                                    <Input type="email" value={user?.email ?? ""} readOnly className="bg-muted" />
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label>Full Name</Label>
+                                        <Input
+                                            value={form.full_name || profile?.name || ""}
+                                            onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))}
+                                            placeholder="Your full name" required
+                                        />
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label>Email</Label>
+                                        <Input type="email" value={user?.email ?? ""} readOnly className="bg-muted" />
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label>Phone</Label>
+                                        <Input
+                                            type="tel"
+                                            value={form.phone || profile?.phone || ""}
+                                            onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                                            placeholder="+91 98765 43210" required
+                                        />
+                                    </div>
                                 </div>
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label>Phone</Label>
-                                    <Input
-                                        type="tel"
-                                        value={form.phone || profile?.phone || ""}
-                                        onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                                        placeholder="+91 98765 43210" required
-                                    />
-                                </div>
-                            </div>
+                            )}
                         </section>
 
                         {/* Saved Addresses or New */}
+                        {user && (
+                            <>
                         <section className="bg-card border border-border/50 rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
@@ -374,6 +522,8 @@ export default function CheckoutPage() {
                                 ))}
                             </div>
                         </section>
+                            </>
+                        )}
                     </div>
 
                     {/* Right: Order Summary */}
@@ -474,9 +624,9 @@ export default function CheckoutPage() {
                                 </div>
                             )}
 
-                            <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={isPlacing}>
+                            <Button type="submit" size="lg" className="w-full h-14 text-lg" disabled={!user || isPlacing}>
                                 {isPlacing ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <CheckCircle2 className="mr-2 h-5 w-5" />}
-                                {isPlacing ? "Processing..." : "Place Order"}
+                                {!user ? "Sign In to Place Order" : isPlacing ? "Processing..." : "Place Order"}
                             </Button>
 
                             <p className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
