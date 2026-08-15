@@ -1,9 +1,30 @@
 import { NextResponse } from 'next/server';
 import { sendSentDMMessage } from '@/lib/sentdm';
+import { Webhook } from 'standardwebhooks';
 
 export async function POST(req: Request) {
     try {
-        const payload = await req.json();
+        const rawBody = await req.text();
+        
+        // Supabase Auth hook signature verification
+        const hookSecret = process.env.SUPABASE_SMS_HOOK_SECRET?.replace('v1,whsec_', '');
+        
+        if (!hookSecret) {
+            console.error('❌ Missing SUPABASE_SMS_HOOK_SECRET environment variable');
+            return NextResponse.json({ error: 'Server misconfiguration' }, { status: 500 });
+        }
+        
+        try {
+            const wh = new Webhook(hookSecret);
+            // Convert Headers object to a plain record
+            const headers = Object.fromEntries(req.headers.entries());
+            wh.verify(rawBody, headers as Record<string, string>);
+        } catch (err: any) {
+            console.error('❌ Webhook verification failed:', err.message);
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const payload = JSON.parse(rawBody);
         console.log('📬 Received Supabase SMS Hook request:', JSON.stringify(payload, null, 2));
 
         const phone = payload?.user?.phone;
