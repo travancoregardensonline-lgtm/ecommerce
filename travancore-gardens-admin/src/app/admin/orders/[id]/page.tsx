@@ -194,6 +194,81 @@ function generateInvoice(order: any) {
     if (win) { win.document.write(html); win.document.close(); win.print(); }
 }
 
+// ─── Packing Slip generator ──────────────────────────────────────────────────
+function generatePackingSlip(order: any) {
+    const items = order?.order_items ?? [];
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+<title>Packing Slip #${order?.order_number ?? order?.id?.slice(0, 8).toUpperCase()}</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 40px; color: #1a1a1a; max-width: 800px; margin: 0 auto; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 2px solid #2E5E3E; }
+  .brand { color: #2E5E3E; font-size: 22px; font-weight: bold; }
+  .badge { background: #2E5E3E; color: white; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: bold; }
+  h3 { color: #2E5E3E; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { background: #f1f5f1; text-align: left; padding: 12px; font-size: 13px; }
+  td { padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+  .info-box { background: #f8fcf8; border: 1px solid #e2ece2; border-radius: 8px; padding: 16px; }
+  .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+  .value { font-size: 13px; font-weight: 500; margin-top: 2px; }
+</style></head><body>
+<div class="header">
+  <div>
+    <div class="brand">🌿 Travancore Gardens</div>
+    <div style="font-size:12px;color:#666;margin-top:4px;">Premium Plants &amp; Accessories</div>
+    <div style="font-size:12px;color:#666;">Kerala, India • orders@travancoregardens.in</div>
+  </div>
+  <div style="text-align:right">
+    <div class="badge">PACKING SLIP</div>
+    <div style="font-size:13px;margin-top:8px;color:#666;">Order #${order?.order_number ?? order?.id?.slice(0, 8).toUpperCase()}</div>
+    <div style="font-size:12px;color:#999;">Date: ${new Date(order?.created_at).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="info-box">
+    <h4 style="margin:0 0 12px;color:#2E5E3E;">Ship To</h4>
+    <div class="value">${order?.addresses?.full_name ?? order?.profiles?.name ?? "Customer"}</div>
+    <div style="font-size:12px;color:#666;margin-top:6px;line-height:1.6;">
+      ${order?.addresses?.address_line1 ?? ""}<br>
+      ${order?.addresses?.address_line2 ? order.addresses.address_line2 + "<br>" : ""}
+      ${order?.addresses?.city ?? ""}, ${order?.addresses?.state ?? ""} - ${order?.addresses?.pincode ?? ""}<br>
+      ${order?.addresses?.phone ?? order?.profiles?.phone ?? ""}
+    </div>
+  </div>
+  <div class="info-box">
+    <h4 style="margin:0 0 12px;color:#2E5E3E;">Order Summary</h4>
+    <div class="label">Order ID</div><div class="value">${order?.order_number ?? order?.id?.slice(0, 8).toUpperCase()}</div>
+    <div class="label" style="margin-top:8px;">Customer Contact</div><div class="value">${order?.profiles?.email ?? "—"}</div>
+    <div class="label" style="margin-top:8px;">Total Items</div><div class="value">${items.reduce((s: number, i: any) => s + i.quantity, 0)}</div>
+  </div>
+</div>
+
+<h4 style="margin:32px 0 12px;color:#2E5E3E;">Items to Pack</h4>
+<table>
+  <thead><tr><th>Item</th><th>SKU</th><th style="text-align:center">Qty</th><th style="text-align:center">Packed</th></tr></thead>
+  <tbody>
+    ${items.map((item: any) => `
+    <tr>
+      <td>${item.products?.name ?? "Product"}</td>
+      <td style="color:#666">${item.products?.sku ?? "—"}</td>
+      <td style="text-align:center;font-weight:bold;font-size:15px">${item.quantity}</td>
+      <td style="text-align:center"><div style="width:20px;height:20px;border:1px solid #ccc;margin:0 auto;border-radius:4px;"></div></td>
+    </tr>`).join("")}
+  </tbody>
+</table>
+
+<div style="margin-top:32px;padding:16px;background:#f8fcf8;border-radius:8px;font-size:12px;color:#666;text-align:center;">
+  Packing Checklist — Please ensure all items are checked before dispatch.
+</div>
+</body></html>`;
+
+    const win = window.open("", "_blank");
+    if (win) { win.document.write(html); win.document.close(); win.print(); }
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function AdminOrderDetailPage() {
     const router = useRouter();
@@ -258,6 +333,9 @@ export default function AdminOrderDetailPage() {
                     </div>
                 </div>
                 <div className="flex gap-2 flex-wrap">
+                    <Button variant="outline" className="gap-2" onClick={() => generatePackingSlip(order)}>
+                        <Package className="h-4 w-4" /> Print Slip
+                    </Button>
                     <Button variant="outline" className="gap-2" onClick={() => generateInvoice(order)}>
                         <FileText className="h-4 w-4" /> Invoice
                     </Button>
