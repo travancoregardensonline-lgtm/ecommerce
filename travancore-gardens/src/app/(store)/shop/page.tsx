@@ -7,6 +7,10 @@ import { Button } from "@/components/ui/button";
 import {
     DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import {
+    Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+    PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { ProductCard, Product } from "@/components/store/ProductCard";
 import { useProducts, useCategories } from "@/hooks/useSupabase";
@@ -158,12 +162,55 @@ function ShopContent() {
                                 ))}
                             </div>
                             {data && data.total > 12 && (
-                                <div className="mt-12 flex justify-center gap-3">
-                                    <Button variant="outline" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Previous</Button>
-                                    <span className="flex items-center text-sm text-muted-foreground px-4">
-                                        Page {page} of {Math.ceil(data.total / 12)}
-                                    </span>
-                                    <Button variant="outline" disabled={page >= Math.ceil(data.total / 12)} onClick={() => setPage(p => p + 1)}>Next</Button>
+                                <div className="mt-12 flex justify-center">
+                                    <Pagination>
+                                        <PaginationContent>
+                                            <PaginationItem>
+                                                <PaginationPrevious 
+                                                    onClick={() => setPage(p => Math.max(1, p - 1))} 
+                                                    className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                />
+                                            </PaginationItem>
+                                            
+                                            {Array.from({ length: Math.ceil(data.total / 12) }).map((_, i) => {
+                                                const pageNum = i + 1;
+                                                const totalPages = Math.ceil(data.total / 12);
+                                                
+                                                if (
+                                                    pageNum === 1 || 
+                                                    pageNum === totalPages ||
+                                                    (pageNum >= page - 1 && pageNum <= page + 1)
+                                                ) {
+                                                    return (
+                                                        <PaginationItem key={pageNum}>
+                                                            <PaginationLink 
+                                                                isActive={page === pageNum}
+                                                                onClick={() => setPage(pageNum)}
+                                                                className="cursor-pointer"
+                                                            >
+                                                                {pageNum}
+                                                            </PaginationLink>
+                                                        </PaginationItem>
+                                                    );
+                                                }
+                                                if (pageNum === page - 2 || pageNum === page + 2) {
+                                                    return (
+                                                        <PaginationItem key={pageNum}>
+                                                            <PaginationEllipsis />
+                                                        </PaginationItem>
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+
+                                            <PaginationItem>
+                                                <PaginationNext 
+                                                    onClick={() => setPage(p => Math.min(Math.ceil(data.total / 12), p + 1))} 
+                                                    className={page >= Math.ceil(data.total / 12) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                />
+                                            </PaginationItem>
+                                        </PaginationContent>
+                                    </Pagination>
                                 </div>
                             )}
                         </>
