@@ -85,8 +85,31 @@ function ShopContent() {
                 </div>
             </div>
 
+            {/* Mobile Categories */}
+            <div className="md:hidden overflow-x-auto pb-4 mb-2 flex gap-2 hide-scrollbar">
+                <Button 
+                    variant={!selectedCategory ? "default" : "outline"}
+                    size="sm"
+                    className="shrink-0 rounded-full"
+                    onClick={() => { setSelectedCategory(""); setPage(1); }}
+                >
+                    All Plants
+                </Button>
+                {((categoriesData as any[]) ?? []).map((cat: any) => (
+                    <Button
+                        key={cat.id}
+                        variant={selectedCategory === cat.slug ? "default" : "outline"}
+                        size="sm"
+                        className="shrink-0 rounded-full"
+                        onClick={() => { setSelectedCategory(cat.slug); setPage(1); }}
+                    >
+                        {cat.name}
+                    </Button>
+                ))}
+            </div>
+
             <div className="flex flex-col md:flex-row gap-8">
-                {/* Sidebar */}
+                {/* Sidebar (Desktop) */}
                 <aside className="hidden md:block w-56 flex-shrink-0">
                     <div className="space-y-4 sticky top-24">
                         <h3 className="font-semibold text-foreground">Categories</h3>
@@ -129,7 +152,7 @@ function ShopContent() {
                         </div>
                     ) : (
                         <>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                                 {products.map(product => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
