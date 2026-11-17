@@ -716,7 +716,15 @@ export default function CheckoutPage() {
                             </Button>
 
                             <p className="mt-4 flex items-center justify-center text-xs text-muted-foreground">
-                                <ShieldCheck className="mr-1 h-3.5 w-3.5 text-primary" /> Safe &amp; Encrypted 256-Bit SSL Checkout
+                                <ShieldCheck className="mr-1.5 h-4 w-4 text-primary" /> Safe &amp; Encrypted 256-Bit SSL Checkout powered by Razorpay
+                            </p>
+
+                            <p className="mt-3 text-center text-[11px] text-muted-foreground leading-relaxed">
+                                By placing an order, you agree to our{" "}
+                                <Link href="/terms" target="_blank" className="text-primary underline hover:text-primary/80">Terms</Link>,{" "}
+                                <Link href="/privacy" target="_blank" className="text-primary underline hover:text-primary/80">Privacy</Link>,{" "}
+                                <Link href="/refund-policy" target="_blank" className="text-primary underline hover:text-primary/80">Refunds</Link>, &amp;{" "}
+                                <Link href="/shipping-policy" target="_blank" className="text-primary underline hover:text-primary/80">Shipping</Link>.
                             </p>
                         </div>
                     </div>

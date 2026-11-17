@@ -1,91 +1,90 @@
 import { Separator } from "@/components/ui/separator";
 import { FileText } from "lucide-react";
+import Link from "next/link";
 
 export const metadata = {
-    title: "Terms of Service | Travancore Gardens",
-    description: "Terms and conditions for using Travancore Gardens website and services.",
+    title: "Terms and Conditions | Travancore Gardens",
+    description: "Terms and conditions for using Travancore Gardens website, placing plant orders, and payment gateway rules.",
 };
 
 export default function TermsOfServicePage() {
     const sections = [
         {
             title: "Acceptance of Terms",
-            content: `By accessing or using the Travancore Gardens website (travancoregardens.in) or any of our services, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our services.
+            content: `By accessing or using the Travancore Gardens website (travancoregardens.com / travancoregardens.in) or placing any order with us, you agree to be bound by these Terms and Conditions, our Privacy Policy, our Shipping Policy, and our Cancellation & Refund Policy. If you do not agree with any part of these terms, please do not use our website.
 
-We reserve the right to update these terms at any time. Continued use of our services after changes constitutes your acceptance of the updated terms.`,
+We reserve the right to update or modify these terms at any time. Continued use of our website or services following any updates constitutes acceptance of the revised terms.`,
         },
         {
-            title: "Products and Pricing",
-            content: `All prices listed on our website are in Indian Rupees (INR) and are inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time without prior notice.
+            title: "Merchant Details & Operating Entity",
+            content: `This website is operated by Travancore Gardens, with registered and operating nursery facilities located at Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India.
 
-Product images are for illustrative purposes. Actual plant appearances may vary due to natural variation, seasons, and growing conditions. We strive to accurately represent all products but cannot guarantee exact colour matches.`,
+All customer communications, order dispatches, invoicing, and service deliveries are executed under the commercial trade name Travancore Gardens.`,
         },
         {
-            title: "Orders and Payment",
-            content: `By placing an order, you represent that you are at least 18 years of age and that the information you provide is accurate and complete.
+            title: "Products, Living Plants & Pricing",
+            content: `All prices listed on our website are in Indian Rupees (INR, ₹) and are inclusive of applicable GST / taxes unless specified otherwise. We reserve the right to change product prices, discounts, and promotional offers without prior notice.
 
-Payment is processed securely through Razorpay. We accept UPI, credit/debit cards, net banking, and other supported payment methods. Orders are confirmed only after successful payment authorisation.
-
-We reserve the right to cancel any order at our discretion, including cases of pricing errors, suspected fraud, or unavailability of the product.`,
+Important Botanical Disclaimer: Living plants are natural organisms. Product photographs represent typical specimens; actual plants delivered may have slight variations in height, foliage volume, variegation, or number of leaves due to seasonality and natural growth characteristics. All plants are sent healthy, inspected, and securely potted/wrapped.`,
         },
         {
-            title: "Shipping and Delivery",
-            content: `We ship across India through our logistics partner, Shiprocket. Delivery timelines are estimates and may vary due to location, weather, courier capacity, or other unforeseen circumstances.
+            title: "Orders, User Eligibility & Checkout",
+            content: `By placing an order on our store, you represent and warrant that:
+• You are at least 18 years of age or accessing under the supervision of a parent/guardian.
+• All information you provide (Name, Shipping Address, Email Address, and Mobile Number) is true, complete, and accurate.
+• You can purchase through our fast Guest Checkout or through an optional registered customer account.
 
-Shipping charges (if any) are calculated at checkout based on your delivery location and order weight. Free shipping thresholds may apply on qualifying orders.
-
-Risk of loss or damage to products transfers to you upon delivery. We are not responsible for delays or losses caused by the courier.`,
+We reserve the right to cancel or decline any order in cases of technical pricing discrepancies, stock unavailability, suspected unauthorized transactions, or unserviceable courier pin codes. In such events, a 100% full refund will be initiated immediately.`,
         },
         {
-            title: "Returns and Refunds",
-            content: `We accept return requests within 7 days of delivery under the following conditions:
-• The product is damaged, defective, or significantly different from what was ordered
-• The item must be in its original packaging (where applicable)
-• Perishable or living plants must be reported within 48 hours of delivery with photo evidence
+            title: "Payments & Payment Gateway (Razorpay)",
+            content: `We offer secure digital payments powered by Razorpay Software Private Limited (Razorpay). 
 
-To initiate a return, contact us at returns@travancoregardens.in with your order number and photos.
+Supported payment methods include:
+• Credit Cards & Debit Cards (Visa, MasterCard, RuPay, Maestro)
+• Unified Payments Interface (UPI via Google Pay, PhonePe, Paytm, BHIM, etc.)
+• Net Banking across 50+ major Indian banks
+• Cash on Delivery (COD) on eligible pin codes and cart values
 
-Refunds are processed within 7–10 business days after we receive and inspect the returned item.`,
+By selecting an online payment method, you agree to Razorpay's terms and authorize the transaction amount. We do not store your complete credit/debit card numbers, CVV, or banking passwords on our servers. All financial transactions are encrypted through 256-bit bank-grade SSL/TLS protocols compliant with PCI-DSS standards.`,
         },
         {
-            title: "Plant Care Responsibility",
-            content: `Living plants are perishable products. Their health and longevity depend on proper care after delivery. We provide care guides for all our plants, but we cannot be held responsible for plant death or decline caused by:
-• Improper watering, light, or temperature conditions
-• Repotting errors
-• Pest infestations after delivery
-• Negligence after delivery`,
+            title: "Shipping, Delivery & Transit Timelines",
+            content: `We ship pan-India across 26,000+ pin codes through Shiprocket and leading express logistics couriers (Blue Dart, Delhivery, DTDC, Xpressbees).
+
+Standard orders are dispatched within 24 to 48 hours of payment confirmation. Estimated delivery time ranges between 3 to 7 business days depending on customer distance and courier connectivity. Full details can be reviewed in our Shipping & Delivery Policy.`,
         },
         {
-            title: "Account and Security",
-            content: `You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. Notify us immediately of any unauthorised use of your account.
+            title: "Cancellations, Returns & Refunds",
+            content: `Cancellations are accepted within 24 hours of placing the order or before courier dispatch.
 
-We reserve the right to terminate or suspend accounts that violate these terms, engage in fraudulent activity, or abuse our services.`,
+Because living plants are perishable, transit damage or discrepancies must be reported within 48 hours of delivery along with photographic or video proof. Approved refunds are credited directly to the original payment source within 5 to 7 business days via Razorpay. Full details can be reviewed in our dedicated Cancellation & Refund Policy.`,
         },
         {
-            title: "Intellectual Property",
-            content: `All content on this website — including text, images, logos, graphics, and product descriptions — is owned by Travancore Gardens or its content suppliers and is protected by Indian and international copyright laws.
-
-You may not reproduce, distribute, or use our content for commercial purposes without written permission.`,
+            title: "Intellectual Property Rights",
+            content: `All content featured on this website — including plant photography, brand logos, graphics, botanical plant care descriptions, UI design, and software code — is the intellectual property of Travancore Gardens. Reproduction, redistribution, or unauthorized commercial scraping without prior written consent is strictly prohibited.`,
         },
         {
             title: "Limitation of Liability",
-            content: `To the maximum extent permitted by law, Travancore Gardens shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our services or products.
+            content: `To the fullest extent permitted by Indian law, Travancore Gardens, its owners, and affiliates shall not be liable for any indirect, incidental, punitive, or consequential damages resulting from the use of our products, courier delays beyond reasonable control, or post-delivery plant mortality due to environmental factors.
 
-Our total liability to you for any claim arising from these terms shall not exceed the amount you paid for the specific order giving rise to the claim.`,
+Our aggregate liability for any claim arising from an order shall not exceed the total purchase value paid by you for that specific order.`,
         },
         {
-            title: "Governing Law",
-            content: `These Terms of Service shall be governed by the laws of India. Any disputes arising from these terms shall be subject to the exclusive jurisdiction of the courts of Thiruvananthapuram, Kerala, India.
+            title: "Governing Law & Legal Jurisdiction",
+            content: `These Terms and Conditions and any transactions concluded on this platform shall be governed by, construed, and enforced in accordance with the substantive laws of India.
 
-If any provision of these terms is found to be unenforceable, the remaining provisions shall continue in full force and effect.`,
+Any legal disputes or proceedings arising out of or in connection with these terms shall be subject to the exclusive jurisdiction of the competent courts of Thiruvananthapuram, Kerala, India.`,
         },
         {
-            title: "Contact Us",
-            content: `For any questions about these Terms of Service, please contact us:
+            title: "Customer Support & Grievance Contact",
+            content: `For any queries, complaints, or legal notices concerning these Terms & Conditions, please reach out to us:
 
-📧 Email: legal@travancoregardens.in
-📞 Phone: +91 80783 15506
-📍 Address: Kattakkada, Thiruvananthapuram, Kerala – 695572, India`,
+📧 Official Support Email: support@travancoregardens.com
+📧 Legal Inquiries: legal@travancoregardens.in
+📞 Customer Helpline: +91 80783 15506
+📍 Operational Address: Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
+🕒 Operational Hours: Monday to Saturday, 9:00 AM – 6:00 PM IST`,
         },
     ];
 
@@ -97,29 +96,36 @@ If any provision of these terms is found to be unenforceable, the remaining prov
                     <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
                         <FileText className="h-5 w-5 text-primary" />
                     </div>
-                    <span className="text-sm font-semibold text-primary uppercase tracking-wide">Legal</span>
+                    <span className="text-sm font-semibold text-primary uppercase tracking-wide">Razorpay Compliance</span>
                 </div>
-                <h1 className="text-4xl font-bold font-heading mb-3">Terms of Service</h1>
-                <p className="text-muted-foreground">
-                    Last updated: <strong>March 2025</strong>
+                <h1 className="text-3xl sm:text-4xl font-bold font-heading mb-3 text-foreground">Terms and Conditions</h1>
+                <p className="text-muted-foreground text-sm">
+                    Last updated: <strong>November 2026</strong>
                 </p>
-                <p className="text-muted-foreground mt-3 leading-relaxed">
-                    Please read these terms carefully before using our website or placing an order.
-                    These terms govern your relationship with Travancore Gardens.
+                <p className="text-muted-foreground mt-3 leading-relaxed text-sm">
+                    Please read these Terms and Conditions carefully before browsing our store or purchasing any plants or accessories. These terms constitute a legally binding agreement between you and Travancore Gardens.
                 </p>
             </div>
 
             <Separator className="mb-10" />
 
+            {/* Quick Links Banner */}
+            <div className="mb-10 p-4 rounded-xl bg-muted/40 border border-border/80 flex flex-wrap gap-4 text-xs font-semibold">
+                <Link href="/privacy" className="text-primary hover:underline">Privacy Policy →</Link>
+                <Link href="/refund-policy" className="text-primary hover:underline">Cancellation &amp; Refund Policy →</Link>
+                <Link href="/shipping-policy" className="text-primary hover:underline">Shipping &amp; Delivery Policy →</Link>
+                <Link href="/contact" className="text-primary hover:underline">Contact Us →</Link>
+            </div>
+
             {/* Sections */}
             <div className="space-y-10">
                 {sections.map((section, idx) => (
-                    <div key={section.title}>
-                        <h2 className="text-xl font-bold font-heading mb-3 flex items-start gap-2">
+                    <div key={section.title} className="space-y-2">
+                        <h2 className="text-xl font-bold font-heading mb-2 flex items-start gap-2 text-foreground">
                             <span className="text-primary font-mono text-base mt-0.5">{String(idx + 1).padStart(2, "0")}.</span>
                             {section.title}
                         </h2>
-                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{section.content}</p>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-line text-sm">{section.content}</p>
                     </div>
                 ))}
             </div>
@@ -127,8 +133,8 @@ If any provision of these terms is found to be unenforceable, the remaining prov
             <Separator className="my-10" />
 
             <div className="bg-muted/40 rounded-xl p-6 text-center text-sm text-muted-foreground">
-                <p>These terms were last reviewed and updated in <strong>March 2025</strong>.</p>
-                <p className="mt-1">Travancore Gardens · Kattakkada, Thiruvananthapuram, Kerala – 695572, India</p>
+                <p>These terms are compliant with Indian Information Technology Act, 2000 and Consumer Protection (E-Commerce) Rules, 2020.</p>
+                <p className="mt-1 font-semibold text-foreground">Travancore Gardens · Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India</p>
             </div>
         </div>
     );
