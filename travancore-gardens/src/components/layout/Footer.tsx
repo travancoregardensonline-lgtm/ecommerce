@@ -140,7 +140,7 @@ export function Footer() {
                 <div className="border-t py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                         <CreditCard className="h-4 w-4 text-primary" />
-                        <span>100% Secure Payments via <strong>Razorpay</strong> (UPI, Cards, NetBanking, COD)</span>
+                        <span>100% Secure Payments via <strong>Razorpay</strong> (UPI, Cards, NetBanking)</span>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
                         <span className="px-2 py-0.5 rounded bg-muted font-medium text-[11px]">UPI</span>
@@ -148,7 +148,6 @@ export function Footer() {
                         <span className="px-2 py-0.5 rounded bg-muted font-medium text-[11px]">MasterCard</span>
                         <span className="px-2 py-0.5 rounded bg-muted font-medium text-[11px]">RuPay</span>
                         <span className="px-2 py-0.5 rounded bg-muted font-medium text-[11px]">NetBanking</span>
-                        <span className="px-2 py-0.5 rounded bg-muted font-medium text-[11px]">Cash on Delivery</span>
                     </div>
                 </div>
 

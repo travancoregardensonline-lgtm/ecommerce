@@ -23,7 +23,7 @@ export default function CheckoutPage() {
     const { data: profile } = useMyProfile();
     const { data: addresses } = useMyAddresses();
 
-    const [paymentMethod, setPaymentMethod] = useState<"card" | "upi" | "cod">("card");
+    const [paymentMethod, setPaymentMethod] = useState<"card" | "upi">("card");
     const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
     const [isPlacing, setIsPlacing] = useState(false);
     const [orderError, setOrderError] = useState<string | null>(null);
@@ -207,14 +207,6 @@ export default function CheckoutPage() {
             }
 
             const createdOrder = orderData.order;
-
-            // Cash on Delivery: Order placed immediately!
-            if (paymentMethod === "cod") {
-                clearCart();
-                toast.success("Order placed successfully!");
-                router.push(`/order-success?order=${createdOrder.id}`);
-                return;
-            }
 
             // Online Payment (Razorpay)
             const rzpRes = await fetch("/api/checkout", {
@@ -560,11 +552,6 @@ export default function CheckoutPage() {
                                         title: "UPI (Google Pay / PhonePe / Paytm / QR)",
                                         desc: "Instant payment via any UPI app",
                                     },
-                                    {
-                                        id: "cod",
-                                        title: "Cash on Delivery (COD)",
-                                        desc: "Pay in cash when your plants arrive at your doorstep",
-                                    },
                                 ].map((opt) => (
                                     <label
                                         key={opt.id}
@@ -710,8 +697,6 @@ export default function CheckoutPage() {
                                 )}
                                 {isPlacing
                                     ? "Processing Order…"
-                                    : paymentMethod === "cod"
-                                    ? "Place Order (Cash on Delivery)"
                                     : `Proceed to Pay ₹${total.toLocaleString("en-IN")}`}
                             </Button>
 

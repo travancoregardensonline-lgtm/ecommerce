@@ -144,9 +144,9 @@ export default function SettingsPage() {
                                     },
                                     {
                                         name: "Cash on Delivery",
-                                        description: "Customers pay at the time of delivery",
-                                        active: true,
-                                        key: "Always available",
+                                        description: "Disabled — 100% prepaid orders only",
+                                        active: false,
+                                        key: "Disabled",
                                     },
                                     {
                                         name: "Cloudinary (Media CDN)",

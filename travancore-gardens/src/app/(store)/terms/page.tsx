@@ -44,7 +44,6 @@ Supported payment methods include:
 • Credit Cards & Debit Cards (Visa, MasterCard, RuPay, Maestro)
 • Unified Payments Interface (UPI via Google Pay, PhonePe, Paytm, BHIM, etc.)
 • Net Banking across 50+ major Indian banks
-• Cash on Delivery (COD) on eligible pin codes and cart values
 
 By selecting an online payment method, you agree to Razorpay's terms and authorize the transaction amount. We do not store your complete credit/debit card numbers, CVV, or banking passwords on our servers. All financial transactions are encrypted through 256-bit bank-grade SSL/TLS protocols compliant with PCI-DSS standards.`,
         },
@@ -55,10 +54,10 @@ By selecting an online payment method, you agree to Razorpay's terms and authori
 Standard orders are dispatched within 24 to 48 hours of payment confirmation. Estimated delivery time ranges between 3 to 7 business days depending on customer distance and courier connectivity. Full details can be reviewed in our Shipping & Delivery Policy.`,
         },
         {
-            title: "Cancellations, Returns & Refunds",
-            content: `Cancellations are accepted within 24 hours of placing the order or before courier dispatch.
+            title: "No Cancellation & No Refund Policy",
+            content: `Travancore Gardens operates under a strict No Cancellation, No Return, and No Refund policy for all purchases made through our website. Due to the living, delicate, and perishable nature of agricultural plants and botanical goods, all sales are final once an order is placed and confirmed.
 
-Because living plants are perishable, transit damage or discrepancies must be reported within 48 hours of delivery along with photographic or video proof. Approved refunds are credited directly to the original payment source within 5 to 7 business days via Razorpay. Full details can be reviewed in our dedicated Cancellation & Refund Policy.`,
+We do not accept order cancellations, returns, or cash/card refunds. In the rare event of transit damage reported within 24 hours of delivery with mandatory unboxing video proof, a free replacement plant will be dispatched. Technical duplicate payments or orders that cannot be fulfilled by us will be refunded back to the original payment source within 5 to 7 business days via Razorpay. Full details can be reviewed in our dedicated Cancellation & Refund Policy.`,
         },
         {
             title: "Intellectual Property Rights",

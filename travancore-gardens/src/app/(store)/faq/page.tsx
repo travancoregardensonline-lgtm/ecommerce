@@ -29,8 +29,8 @@ const faqs = [
         category: "Plant Care",
         questions: [
             {
-                q: "What if my plant arrives damaged?",
-                a: "We have a 30-day guarantee. If your plant arrives damaged or dies within the first 30 days despite proper care, we will replace it for free."
+                q: "What if my plant arrives damaged in transit?",
+                a: "If a plant or pot arrives severely damaged in transit, please share an unboxing video and photos with us within 24 hours of delivery. Upon verification, we will send a free replacement plant. We maintain a strict no-refund policy."
             },
             {
                 q: "How do I know how to care for my new plant?",
@@ -43,15 +43,15 @@ const faqs = [
         ]
     },
     {
-        category: "Returns & Exchanges",
+        category: "Cancellations & Returns",
         questions: [
             {
-                q: "Can I return a plant?",
-                a: "Due to the perishable nature of plants, we do not accept returns. However, we do offer replacements under our 30-Day Guarantee if the plant arrives damaged."
+                q: "Can I cancel my order?",
+                a: "No. Because plants are living goods prepared immediately for transit, orders cannot be cancelled or modified once confirmed."
             },
             {
-                q: "Can I return accessories or pots?",
-                a: "Yes, non-living items like pots, planters, and accessories can be returned within 14 days of delivery in their original, unused condition."
+                q: "Can I return a plant or gardening accessory?",
+                a: "Due to the delicate and perishable nature of live flora, all sales are final. We maintain a strict No Return, No Cancellation, and No Refund policy."
             }
         ]
     }
