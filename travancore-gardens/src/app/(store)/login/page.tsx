@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     Leaf,
@@ -190,8 +191,14 @@ function LoginContent() {
                     }}
                 />
                 <div className="relative z-10">
-                    <Link href="/" className="flex items-center gap-2 text-white group">
-                        <Leaf className="h-7 w-7 transition-transform group-hover:rotate-12" />
+                    <Link href="/" className="flex items-center gap-2.5 text-white group">
+                        <Image
+                            src="/logo.png"
+                            alt="Travancore Gardens Logo"
+                            width={40}
+                            height={40}
+                            className="h-10 w-10 object-contain drop-shadow-md group-hover:scale-105 transition-transform"
+                        />
                         <span className="text-2xl font-bold font-heading">Travancore Gardens</span>
                     </Link>
                 </div>
@@ -225,7 +232,13 @@ function LoginContent() {
                     {/* Mobile Logo */}
                     <div className="text-center lg:hidden">
                         <Link href="/" className="inline-flex items-center gap-2 text-primary mb-2">
-                            <Leaf className="h-6 w-6" />
+                            <Image
+                                src="/logo.png"
+                                alt="Travancore Gardens Logo"
+                                width={32}
+                                height={32}
+                                className="h-8 w-8 object-contain"
+                            />
                             <span className="text-xl font-bold font-heading">Travancore Gardens</span>
                         </Link>
                     </div>

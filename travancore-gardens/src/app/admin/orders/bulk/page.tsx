@@ -13,7 +13,7 @@ function generatePackingSlip(order: any): string {
     const addr = order.profiles;
     return `<!DOCTYPE html><html><head><title>Packing Slip – ${orderNumber}</title>
     <style>body{font-family:Arial,sans-serif;padding:32px;max-width:600px;margin:0 auto;}h1{font-size:20px;border-bottom:2px solid #000;padding-bottom:8px;}table{width:100%;border-collapse:collapse;margin-top:16px;}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc;}th{font-size:12px;text-transform:uppercase;color:#666;}.header{display:flex;justify-content:space-between;margin-bottom:24px;}</style></head>
-    <body><div class="header"><div><strong>🌿 Travancore Gardens</strong><br>Kerala, India</div><div style="text-align:right"><strong>PACKING SLIP</strong><br>Order #${orderNumber}</div></div>
+    <body><div class="header"><div><strong><img src="/logo.png" style="height:28px;vertical-align:middle;margin-right:6px;" alt="Logo" />Travancore Gardens</strong><br>Kerala, India</div><div style="text-align:right"><strong>PACKING SLIP</strong><br>Order #${orderNumber}</div></div>
     <p><strong>Ship To:</strong> ${addr?.name ?? "Customer"}</p>
     <table><thead><tr><th>Product</th><th>Qty</th></tr></thead><tbody>
     ${items.map((i: any) => `<tr><td>${i.products?.name ?? "Plant"}</td><td>${i.quantity}</td></tr>`).join("")}
@@ -62,7 +62,7 @@ export default function BulkOrdersPage() {
             const subtotal = items.reduce((s: number, i: any) => s + (Number(i.price) * Number(i.quantity)), 0);
             const html = `<!DOCTYPE html><html><head><title>Invoice ${orderNumber}</title>
             <style>body{font-family:Arial,sans-serif;padding:32px;max-width:720px;margin:0 auto;}h1{font-size:24px;color:#14532d;}table{width:100%;border-collapse:collapse;margin-top:16px;}th,td{text-align:left;padding:8px;border-bottom:1px solid #e8f5e9;}th{font-size:12px;text-transform:uppercase;color:#6b7280;}.total{font-weight:bold;font-size:16px;}</style></head>
-            <body><h1>🌿 Travancore Gardens</h1><p>Invoice #${orderNumber} · Date: ${new Date(order.created_at).toLocaleDateString("en-IN")}</p>
+            <body><h1><img src="/logo.png" style="height:32px;vertical-align:middle;margin-right:8px;" alt="Logo" />Travancore Gardens</h1><p>Invoice #${orderNumber} · Date: ${new Date(order.created_at).toLocaleDateString("en-IN")}</p>
             <table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>
             ${items.map((i: any) => `<tr><td>${i.products?.name ?? "Plant"}</td><td>${i.quantity}</td><td>₹${Number(i.price).toLocaleString("en-IN")}</td><td>₹${(Number(i.price) * Number(i.quantity)).toLocaleString("en-IN")}</td></tr>`).join("")}
             </tbody></table><p class="total" style="margin-top:16px;">Total: ₹${Number(order.total_amount ?? subtotal).toLocaleString("en-IN")}</p></body></html>`;

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, ShieldCheck, Leaf, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Loader2, ShieldCheck, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
@@ -75,8 +76,15 @@ export default function AdminLoginPage() {
             <div className="relative w-full max-w-md">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center h-16 w-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4 border border-white/20">
-                        <Leaf className="h-8 w-8 text-white" />
+                    <div className="inline-flex items-center justify-center h-20 w-20 rounded-2xl bg-white/15 backdrop-blur-md mb-4 border border-white/20 p-2.5 shadow-xl">
+                        <Image
+                            src="/logo.png"
+                            alt="Travancore Gardens Logo"
+                            width={64}
+                            height={64}
+                            className="h-full w-full object-contain"
+                            priority
+                        />
                     </div>
                     <h1 className="text-2xl font-bold text-white tracking-tight">Travancore Gardens</h1>
                     <p className="text-white/60 text-sm mt-1">Admin Portal</p>

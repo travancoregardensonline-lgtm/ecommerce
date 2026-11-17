@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import {
@@ -77,9 +78,15 @@ export function AdminSidebar() {
     return (
         <aside className="w-64 bg-sidebar border-r flex flex-col h-full overflow-y-auto z-10 transition-transform">
             <div className="h-16 flex items-center px-6 border-b shrink-0">
-                <Link href="/admin/dashboard" className="flex items-center space-x-2 text-sidebar-primary">
-                    <Leaf className="h-6 w-6" />
-                    <span className="text-xl font-bold font-heading">TG Admin</span>
+                <Link href="/admin/dashboard" className="flex items-center space-x-2.5 text-sidebar-primary">
+                    <Image
+                        src="/logo.png"
+                        alt="Travancore Gardens"
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 object-contain"
+                    />
+                    <span className="text-lg font-bold font-heading">TG Admin</span>
                 </Link>
             </div>
             <div className="flex-1 py-4 px-4 space-y-4 overflow-y-auto">

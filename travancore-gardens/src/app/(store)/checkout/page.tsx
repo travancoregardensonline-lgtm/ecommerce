@@ -231,6 +231,7 @@ export default function CheckoutPage() {
                 currency: rzpOrder.currency,
                 name: "Travancore Gardens",
                 description: "Plant Order Checkout",
+                image: "/logo.png",
                 order_id: rzpOrder.id,
                 handler: async function (response: any) {
                     try {

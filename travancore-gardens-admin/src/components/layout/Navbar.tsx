@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Search, User, Menu, X, Leaf } from "lucide-react";
+import Image from "next/image";
+import { ShoppingCart, Search, User, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -38,9 +39,18 @@ export function Navbar() {
                 <div className="container mx-auto px-4 sm:px-8 lg:px-12">
                     <div className="flex h-16 sm:h-20 items-center justify-between">
                         <div className="flex items-center">
-                            <Link href="/" className="text-xl sm:text-2xl font-black tracking-tighter font-heading text-zinc-900 dark:text-white group flex items-center gap-2">
-                                <Leaf className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform" />
-                                Travancore <span className="text-primary italic font-medium font-serif lowercase">Gardens</span>
+                            <Link href="/" className="text-xl sm:text-2xl font-black tracking-tighter font-heading text-zinc-900 dark:text-white group flex items-center gap-2.5">
+                                <Image
+                                    src="/logo.png"
+                                    alt="Travancore Gardens Logo"
+                                    width={40}
+                                    height={40}
+                                    className="h-9 w-9 sm:h-10 sm:w-10 object-contain group-hover:scale-105 transition-transform"
+                                    priority
+                                />
+                                <span>
+                                    Travancore <span className="text-primary italic font-medium font-serif lowercase">Gardens</span>
+                                </span>
                             </Link>
                         </div>
 

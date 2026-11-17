@@ -20,8 +20,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Travancore Gardens | Premium Plants & Accessories",
-  description: "Modern full-stack ecommerce platform for indoor plants, outdoor plants, rare tropical plants, pots, and gardening accessories.",
+  title: "Travancore Gardens Admin | Portal",
+  description: "Administrative console for managing Travancore Gardens store operations, inventory, and orders.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

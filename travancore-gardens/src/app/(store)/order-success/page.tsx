@@ -55,7 +55,7 @@ function generateInvoiceHTML(order: any): string {
     <div class="wrap">
         <div class="header">
             <div>
-                <div class="brand-name">🌿 Travancore Gardens</div>
+                <div class="brand-name"><img src="/logo.png" style="height:32px;width:auto;vertical-align:middle;margin-right:8px;display:inline-block;" alt="Logo" />Travancore Gardens</div>
                 <div class="brand-sub">Premium Indoor Plants · Kerala, India</div>
                 <div style="margin-top:16px;font-size:12px;color:#6b7280;line-height:1.8;">
                     support@travancoregardens.com

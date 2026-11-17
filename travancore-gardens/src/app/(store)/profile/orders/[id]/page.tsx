@@ -128,8 +128,8 @@ function generateInvoiceHTML(order: any): string {
     <div class="wrap">
         <div class="header">
             <div>
-                <div class="brand-logo">
-                    <div class="logo-leaf">🌿</div>
+                <div class="brand-logo" style="display:flex;align-items:center;gap:10px;">
+                    <img src="/logo.png" style="height:36px;width:auto;" alt="Logo" />
                     <div>
                         <div class="brand-name">Travancore Gardens</div>
                         <div class="brand-sub">Premium Indoor Plants</div>

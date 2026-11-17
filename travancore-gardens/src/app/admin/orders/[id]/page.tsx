@@ -134,7 +134,7 @@ function generateInvoice(order: any) {
 </style></head><body>
 <div class="header">
   <div>
-    <div class="brand">🌿 Travancore Gardens</div>
+    <div class="brand"><img src="/logo.png" style="height:32px;width:auto;vertical-align:middle;margin-right:8px;display:inline-block;" alt="Logo" />Travancore Gardens</div>
     <div style="font-size:12px;color:#666;margin-top:4px;">Premium Plants &amp; Accessories</div>
     <div style="font-size:12px;color:#666;">Kerala, India • orders@travancoregardens.in</div>
   </div>
