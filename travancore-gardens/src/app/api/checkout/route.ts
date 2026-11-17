@@ -25,9 +25,6 @@ export async function POST(req: Request) {
 
         const razorpayOrder = await razorpay.orders.create(options);
 
-        // Optionally store the order map in Supabase if needed conceptually right here, 
-        // but typically you do that down the line on successful payment.
-
         return NextResponse.json({
             id: razorpayOrder.id,
             currency: razorpayOrder.currency,
@@ -35,7 +32,8 @@ export async function POST(req: Request) {
         });
 
     } catch (error: any) {
-        console.error("Razorpay Order Error:", error);
-        return NextResponse.json({ error: "Failed to initialize standard checkout." }, { status: 500 });
+        console.error("Razorpay Order Error:", error?.error || error);
+        const description = error?.error?.description || error?.message || "Failed to initialize payment gateway.";
+        return NextResponse.json({ error: description }, { status: 500 });
     }
 }
