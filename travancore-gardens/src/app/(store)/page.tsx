@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ProductCard, Product } from "@/components/store/ProductCard";
 import { CategoryCard } from "@/components/store/CategoryCard";
-import { ArrowRight, Leaf, ShieldCheck, Truck, Loader2, Star, Instagram, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Leaf, Truck, Loader2, Star, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useCategories, useFeaturedProducts, useBanners } from "@/hooks/useSupabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -133,9 +133,9 @@ export default function Home() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center bg-white dark:bg-zinc-900 shadow-2xl rounded-[3rem] p-12 md:p-16 border border-zinc-100 dark:border-zinc-800">
             {[
-              { icon: Leaf, title: "Nature's Best", desc: "Every plant is hand-selected and nurtured by experts." },
-              { icon: Truck, title: "Eco Shipping", desc: "Special 100% sustainable packaging for zero damage arrival." },
-              { icon: Star, title: "Expert Care", desc: "Lifetime growth support and detailed guides for every purchase." },
+              { icon: Leaf, title: "Nature's Best", desc: "Every plant is hand-selected and carefully nurtured." },
+              { icon: Truck, title: "Eco Shipping", desc: "Sustainable protective packaging for safe transit." },
+              { icon: Star, title: "Botanical Quality", desc: "Nursery-grown plants potted in nutrient-rich organic soil." },
             ].map((f, i) => (
               <motion.div
                 key={f.title}
@@ -173,7 +173,7 @@ export default function Home() {
             <div className="flex justify-center h-40 items-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(categories as any[] ?? []).slice(0, 3).map((cat: any) => (
+              {(categories as any[] ?? []).map((cat: any) => (
                 <CategoryCard key={cat.id} category={{ id: cat.id, name: cat.name, slug: cat.slug, imageUrl: cat.image_url ?? "https://images.unsplash.com/photo-1485955900006-10f4d324d411" }} />
               ))}
             </div>
@@ -224,7 +224,7 @@ export default function Home() {
             >
               <Image
                 src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=1000"
-                alt="Plant care"
+                alt="Greenhouse plants"
                 fill
                 className="object-cover"
               />
@@ -235,15 +235,13 @@ export default function Home() {
               <span className="bg-primary/10 text-primary font-black px-4 py-2 rounded-full uppercase text-[10px] tracking-widest">Sustainability First</span>
               <h2 className="text-4xl md:text-6xl font-black text-zinc-900 dark:text-white leading-tight">Plants That Do <br /> Good For You.</h2>
               <p className="text-xl text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Our mission is to bridge the gap between urban living and nature. We use organic fertilizers, plastic-free packaging, and provide a 30-day health guarantee for all greenery.
+                Our mission is to bridge the gap between urban living and nature, delivering healthy, vibrant plants directly from our nursery to your home.
               </p>
 
               <div className="space-y-4">
                 {[
-                  "30-Day Health Guarantee",
+                  "Nursery-Acclimated Plants",
                   "Direct from Greenhouse",
-                  "Biodegradable Packaging",
-                  "Expert Support Line"
                 ].map(item => (
                   <div key={item} className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-primary" />
@@ -256,42 +254,6 @@ export default function Home() {
                 <Link href="/about">Learn More About Us</Link>
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-32 bg-primary dark:bg-zinc-900 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl" />
-
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center text-white">
-          <h2 className="text-4xl md:text-7xl font-black mb-8 leading-tight">Join Our Green <br /> Community.</h2>
-          <p className="text-white/80 text-xl max-w-2xl mx-auto mb-12">
-            Subscribe for plant care tips, exclusive nursery updates, and 10% off your first order.
-          </p>
-
-          <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 h-16 rounded-full px-8 bg-white/10 border border-white/20 backdrop-blur-md text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-            />
-            <Button className="h-16 px-10 rounded-full bg-white text-primary hover:bg-zinc-100 font-black uppercase tracking-widest text-xs">
-              Subscribe
-            </Button>
-          </div>
-
-          <div className="mt-12 flex justify-center gap-8 opacity-60">
-            <Link href="#" className="hover:opacity-100 transition-opacity flex items-center gap-2 font-bold tracking-widest text-[10px] uppercase">
-              <Instagram className="h-4 w-4" /> Instagram
-            </Link>
-            <Link href="#" className="hover:opacity-100 transition-opacity flex items-center gap-2 font-bold tracking-widest text-[10px] uppercase">
-              Facebook
-            </Link>
-            <Link href="#" className="hover:opacity-100 transition-opacity flex items-center gap-2 font-bold tracking-widest text-[10px] uppercase">
-              Pinterest
-            </Link>
           </div>
         </div>
       </section>

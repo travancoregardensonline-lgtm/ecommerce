@@ -39,7 +39,7 @@ export default function ContactPage() {
                     Contact Travancore Gardens
                 </h1>
                 <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                    Have questions about plant care, order tracking, bulk purchases, or shipping? Our botanical experts and customer care team are always ready to assist you.
+                    Have questions about your order, tracking, bulk purchases, or shipping? Our customer care team is always ready to assist you.
                 </p>
             </div>
 
@@ -148,19 +148,6 @@ export default function ContactPage() {
                         </div>
 
                         <div className="space-y-6 text-sm">
-                            <div className="flex items-start gap-4">
-                                <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0 text-primary">
-                                    <Phone className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-foreground">Phone &amp; WhatsApp Support</h3>
-                                    <p className="text-muted-foreground mt-0.5">
-                                        <a href="tel:+918078315506" className="text-primary font-medium hover:underline">+91 80783 15506</a>
-                                    </p>
-                                    <p className="text-xs text-muted-foreground mt-0.5">Direct line for customer orders &amp; care</p>
-                                </div>
-                            </div>
-
                             <div className="flex items-start gap-4">
                                 <div className="h-10 w-10 bg-primary/10 rounded-xl flex items-center justify-center shrink-0 text-primary">
                                     <Mail className="h-5 w-5" />

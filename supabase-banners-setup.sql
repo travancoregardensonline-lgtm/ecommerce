@@ -56,7 +56,7 @@ USING (
     )
 );
 
--- 8. Insert Initial Starter Banners (Standard columns)
+-- 8. Insert Initial Starter Banner
 INSERT INTO public.banners (title, subtitle, description, image_url, button_text, button_link, is_active)
 VALUES 
 (
@@ -66,15 +66,6 @@ VALUES
     'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1600',
     'Start Shopping',
     '/shop',
-    true
-),
-(
-    'Rare <br /> <span class="text-primary italic font-serif lowercase font-medium">Tropical</span> Gems <br /> For Plant Lovers.',
-    'Collector Choice',
-    'Explore rare Monsteras, Philodendrons, and Calatheas with specialized live-transit packaging guarantee.',
-    'https://images.unsplash.com/photo-1466692476878-424526bf1639?auto=format&fit=crop&q=80&w=1600',
-    'Explore Rare Plants',
-    '/shop?category=rare',
     true
 )
 ON CONFLICT DO NOTHING;

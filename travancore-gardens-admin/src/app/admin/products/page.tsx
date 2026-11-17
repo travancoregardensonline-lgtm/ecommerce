@@ -27,7 +27,6 @@ export default function AdminProductsPage() {
     const { data: { products = [], total = 0 } = {}, isLoading } = useAdminProducts(page, 10, search);
     const deleteProduct = useDeleteProduct();
     const createProduct = useCreateProduct();
-    const [isSeeding, setIsSeeding] = useState(false);
 
     // Modal states
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -57,35 +56,6 @@ export default function AdminProductsPage() {
         }
     };
 
-    const handleSeed = async () => {
-        if (confirm("Are you sure you want to add 15 mock products?")) {
-            setIsSeeding(true);
-            try {
-                for (let i = 1; i <= 15; i++) {
-                    const randomNum = Math.floor(Math.random() * 10000);
-                    await createProduct.mutateAsync({
-                        product: {
-                            name: `Mock Pagination Plant ${randomNum} - ${i}`,
-                            slug: `mock-pagination-plant-${randomNum}-${i}`,
-                            description: 'This is a mock product generated to test pagination features in the admin dashboard and shop.',
-                            price: Math.floor(Math.random() * 1000) + 100,
-                            stock: Math.floor(Math.random() * 50) + 10,
-                            is_active: true,
-                            sku: `MOCK-PG-${randomNum}-${i}`
-                        },
-                        image_urls: ['https://images.pexels.com/photos/6913087/pexels-photo-6913087.jpeg?auto=compress&cs=tinysrgb&w=600']
-                    });
-                }
-                alert("Successfully added 15 mock products!");
-            } catch (err) {
-                console.error("Failed to seed", err);
-                alert("Failed to seed products.");
-            } finally {
-                setIsSeeding(false);
-            }
-        }
-    };
-
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -94,9 +64,6 @@ export default function AdminProductsPage() {
                     <p className="text-muted-foreground mt-1">Manage your store&apos;s inventory and product listings.</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="secondary" className="shrink-0 gap-2" onClick={handleSeed} disabled={isSeeding}>
-                        {isSeeding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Package className="h-4 w-4" />} Seed 15 Products
-                    </Button>
                     <Button className="shrink-0 gap-2" onClick={handleAdd}>
                         <Plus className="h-4 w-4" /> Add Product
                     </Button>

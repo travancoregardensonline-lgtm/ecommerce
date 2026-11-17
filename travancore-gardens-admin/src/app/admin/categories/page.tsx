@@ -112,9 +112,17 @@ export default function AdminCategoriesPage() {
                                     </TableCell>
                                     <TableCell className="text-muted-foreground">{category.slug}</TableCell>
                                     <TableCell className="text-muted-foreground">
-                                        {category.parent ? (
-                                            <span className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground ring-1 ring-inset ring-secondary-foreground/10">{category.parent.name}</span>
-                                        ) : "—"}
+                                        {Array.isArray(category.parent) && category.parent.length > 0 && category.parent[0].name ? (
+                                            <span className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground ring-1 ring-inset ring-secondary-foreground/10">
+                                                {category.parent[0].name}
+                                            </span>
+                                        ) : category.parent && !Array.isArray(category.parent) && category.parent.name ? (
+                                            <span className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground ring-1 ring-inset ring-secondary-foreground/10">
+                                                {category.parent.name}
+                                            </span>
+                                        ) : (
+                                            "—"
+                                        )}
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end items-center gap-2">

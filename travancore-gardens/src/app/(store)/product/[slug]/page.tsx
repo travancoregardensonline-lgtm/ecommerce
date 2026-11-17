@@ -2,7 +2,7 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { ShieldCheck, Truck, Droplets, Sun, ShoppingCart, Star, Loader2, AlertCircle } from "lucide-react";
+import { Leaf, Truck, Droplets, Sun, ShoppingCart, Star, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -214,8 +214,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                         {[
                             { icon: Sun, label: "Light", value: product.care_light ?? "Indirect Light" },
                             { icon: Droplets, label: "Water", value: product.care_water ?? "Moderate" },
-                            { icon: Truck, label: "Delivery", value: "Free Shipping" },
-                            { icon: ShieldCheck, label: "Guarantee", value: "30-Day Guarantee" },
+                            { icon: Truck, label: "Delivery", value: "Safe Transit" },
+                            { icon: Leaf, label: "Origin", value: "Direct from Nursery" },
                         ].map(item => (
                             <div key={item.label} className="flex items-center gap-2">
                                 <item.icon className="h-4 w-4 text-primary shrink-0" />

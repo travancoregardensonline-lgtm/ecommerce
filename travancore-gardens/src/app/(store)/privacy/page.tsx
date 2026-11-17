@@ -78,7 +78,6 @@ Name: Grievance Redressal Officer
 Entity: Travancore Gardens
 Address: Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
 Email: grievance@travancoregardens.com / support@travancoregardens.com
-Phone: +91 80783 15506
 Working Hours: Monday to Friday, 10:00 AM – 5:00 PM IST
 
 We acknowledge grievances within 48 hours and strive to resolve any dispute within 30 days from receipt.`,

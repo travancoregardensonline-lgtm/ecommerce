@@ -28,9 +28,54 @@ export function useProducts(filters: ProductFilters = {}) {
 
             let query = supabase
                 .from("products")
-                .select(`*, categories(name, slug), product_images(image_url, is_primary)`, { count: "exact" })
-                .eq("is_active", true)
-                .range((page - 1) * limit, page * limit - 1);
+                .select(`*, categories(id, name, slug), product_images(image_url, is_primary)`, { count: "exact" })
+                .eq("is_active", true);
+
+            // Filter by category in database (resolving slug, name, or UUID)
+            if (category && category !== "all") {
+                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(category);
+                if (isUuid) {
+                    query = query.eq("category_id", category);
+                } else {
+                    const { data: allCats } = await supabase.from("categories").select("id, name, slug");
+                    const target = decodeURIComponent(category).trim().toLowerCase();
+                    const targetHyphen = target.replace(/\s+/g, "-");
+                    const targetSpace = target.replace(/-/g, " ");
+
+                    const exact = (allCats ?? []).find((c: any) => {
+                        const slug = (c.slug ?? "").toLowerCase();
+                        const name = (c.name ?? "").toLowerCase();
+                        const slugNoS = slug.replace(/s\b/g, "");
+                        const nameNoS = name.replace(/s\b/g, "");
+                        const targetNoS = target.replace(/s\b/g, "");
+
+                        return (
+                            c.id === category ||
+                            slug === target ||
+                            slug === targetHyphen ||
+                            slug === targetSpace ||
+                            name === target ||
+                            name === targetHyphen ||
+                            name === targetSpace ||
+                            slugNoS === targetNoS ||
+                            nameNoS === targetNoS
+                        );
+                    });
+
+                    const matchedCat = exact ?? (allCats ?? []).find((c: any) => {
+                        const slug = (c.slug ?? "").toLowerCase();
+                        const name = (c.name ?? "").toLowerCase();
+                        return slug.includes(target) || name.includes(target);
+                    });
+
+                    if (matchedCat?.id) {
+                        query = query.eq("category_id", matchedCat.id);
+                    } else {
+                        // Category not found
+                        return { products: [], total: 0 };
+                    }
+                }
+            }
 
             if (search) query = query.ilike("name", `%${search}%`);
             if (minPrice !== undefined) query = query.gte("price", minPrice);
@@ -39,14 +84,12 @@ export function useProducts(filters: ProductFilters = {}) {
             else if (sort === "price_desc") query = query.order("price", { ascending: false });
             else query = query.order("created_at", { ascending: false });
 
+            query = query.range((page - 1) * limit, page * limit - 1);
+
             const { data, error, count } = await query;
             if (error) throw toError(error);
 
-            const products = category
-                ? (data ?? []).filter((p: any) => p.categories?.slug === category)
-                : (data ?? []);
-
-            return { products, total: count ?? 0 };
+            return { products: data ?? [], total: count ?? 0 };
         },
     });
 }

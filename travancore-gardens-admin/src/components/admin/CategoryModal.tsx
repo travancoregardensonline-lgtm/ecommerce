@@ -85,7 +85,7 @@ export function CategoryModal({
         try {
             const payload = {
                 name: formData.name,
-                slug: formData.slug || formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                slug: (formData.slug || formData.name).toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
                 description: formData.description || null,
                 image_url: formData.image_url || null,
                 parent_id: formData.parent_id === "none" || !formData.parent_id ? null : formData.parent_id,

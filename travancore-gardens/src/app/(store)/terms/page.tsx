@@ -55,13 +55,13 @@ Standard orders are dispatched within 24 to 48 hours of payment confirmation. Es
         },
         {
             title: "No Cancellation & No Refund Policy",
-            content: `Travancore Gardens operates under a strict No Cancellation, No Return, and No Refund policy for all purchases made through our website. Due to the living, delicate, and perishable nature of agricultural plants and botanical goods, all sales are final once an order is placed and confirmed.
+            content: `Travancore Gardens operates under a strict No Cancellation, No Return, No Replacement, and No Refund policy for all purchases made through our website. Due to the living, delicate, and perishable nature of agricultural plants and botanical goods, all sales are final once an order is placed and confirmed.
 
-We do not accept order cancellations, returns, or cash/card refunds. In the rare event of transit damage reported within 24 hours of delivery with mandatory unboxing video proof, a free replacement plant will be dispatched. Technical duplicate payments or orders that cannot be fulfilled by us will be refunded back to the original payment source within 5 to 7 business days via Razorpay. Full details can be reviewed in our dedicated Cancellation & Refund Policy.`,
+We do not accept order cancellations, returns, replacements, or cash/card refunds under any circumstances. Technical duplicate payments or orders that cannot be fulfilled by us will be refunded back to the original payment source within 5 to 7 business days via Razorpay. Full details can be reviewed in our dedicated Cancellation & Refund Policy.`,
         },
         {
             title: "Intellectual Property Rights",
-            content: `All content featured on this website — including plant photography, brand logos, graphics, botanical plant care descriptions, UI design, and software code — is the intellectual property of Travancore Gardens. Reproduction, redistribution, or unauthorized commercial scraping without prior written consent is strictly prohibited.`,
+            content: `All content featured on this website — including plant photography, brand logos, graphics, botanical plant descriptions, UI design, and software code — is the intellectual property of Travancore Gardens. Reproduction, redistribution, or unauthorized commercial scraping without prior written consent is strictly prohibited.`,
         },
         {
             title: "Limitation of Liability",
@@ -81,7 +81,6 @@ Any legal disputes or proceedings arising out of or in connection with these ter
 
 📧 Official Support Email: support@travancoregardens.com
 📧 Legal Inquiries: legal@travancoregardens.in
-📞 Customer Helpline: +91 80783 15506
 📍 Operational Address: Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
 🕒 Operational Hours: Monday to Saturday, 9:00 AM – 6:00 PM IST`,
         },

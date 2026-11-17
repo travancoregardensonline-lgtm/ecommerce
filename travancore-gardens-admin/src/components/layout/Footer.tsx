@@ -41,7 +41,7 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground tracking-tight">Shop</h3>
+                        <h3 className="font-semibold text-foreground tracking-tight">Shop Categories</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/shop" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -49,18 +49,23 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=indoor" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Indoor Plants
+                                <Link href="/shop?category=flowering-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Flowering Plants
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=outdoor" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Outdoor Plants
+                                <Link href="/shop?category=fruits-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Fruits Plants
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=accessories" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Pots & Accessories
+                                <Link href="/shop?category=creeper-rose" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Creeper Rose
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/shop?category=rose-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Rose Plants
                                 </Link>
                             </li>
                         </ul>
@@ -83,11 +88,6 @@ export function Footer() {
                             <li>
                                 <Link href="/track-order" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                                     Track Order
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/plant-care" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Plant Care Guide
                                 </Link>
                             </li>
                         </ul>

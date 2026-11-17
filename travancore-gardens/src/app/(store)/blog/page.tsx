@@ -30,7 +30,7 @@ export default async function BlogPage() {
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold font-heading mb-6 tracking-tight">The Travancore Journal</h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                        Plant care guides, décor tips, and stories from our nursery.
+                        Botanical insights, décor tips, and stories from our nursery.
                     </p>
                 </div>
                 <div className="text-center py-24 border rounded-2xl text-muted-foreground">
@@ -51,7 +51,7 @@ export default async function BlogPage() {
             <div className="text-center mb-16">
                 <h1 className="text-4xl md:text-5xl font-bold font-heading mb-6 tracking-tight">The Travancore Journal</h1>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Plant care guides, décor tips, and stories from our nursery. Grow with us.
+                    Botanical insights, décor tips, and stories from our nursery. Grow with us.
                 </p>
             </div>
 

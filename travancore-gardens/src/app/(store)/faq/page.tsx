@@ -26,15 +26,15 @@ const faqs = [
         ]
     },
     {
-        category: "Plant Care",
+        category: "Plants & Orders",
         questions: [
             {
                 q: "What if my plant arrives damaged in transit?",
-                a: "If a plant or pot arrives severely damaged in transit, please share an unboxing video and photos with us within 24 hours of delivery. Upon verification, we will send a free replacement plant. We maintain a strict no-refund policy."
+                a: "Due to the living, delicate, and perishable nature of botanical specimens, all sales are final upon order placement. We maintain a strict No Cancellation, No Return, No Replacement, and No Refund policy. We take utmost care with custom protective packaging to ensure safe transit."
             },
             {
-                q: "How do I know how to care for my new plant?",
-                a: "Every plant comes with a detailed care card. You can also view care instructions on the product page or in our Plant Care Guide section."
+                q: "How do I care for my new plant?",
+                a: "Every plant comes carefully hydrated and potted in nutrient-rich soil. We recommend placing your new plant in indirect sunlight and allowing it to acclimate to your space."
             },
             {
                 q: "Are the planters included?",

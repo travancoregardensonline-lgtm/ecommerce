@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Check, Loader2, SlidersHorizontal, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,14 +17,51 @@ import { useProducts, useCategories } from "@/hooks/useSupabase";
 
 function ShopContent() {
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const [search, setSearch] = useState(searchParams.get("search") ?? "");
     const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
     const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") ?? "");
     const [page, setPage] = useState(1);
 
+    // Sync with URL query parameter changes
+    useEffect(() => {
+        const cat = searchParams.get("category") ?? "";
+        setSelectedCategory(cat);
+        const s = searchParams.get("search") ?? "";
+        if (s !== search) setSearch(s);
+        setPage(1);
+    }, [searchParams]);
+
     const { data: categoriesData } = useCategories();
     const { data, isLoading } = useProducts({ search, sort, category: selectedCategory || undefined, page, limit: 12 });
+
+    const activeCategory = (categoriesData as any[])?.find((c: any) => {
+        if (!selectedCategory) return false;
+        const target = decodeURIComponent(selectedCategory).trim().toLowerCase();
+        const slug = (c.slug ?? "").toLowerCase();
+        const name = (c.name ?? "").toLowerCase();
+        return (
+            c.id === selectedCategory ||
+            slug === target ||
+            slug.replace(/-/g, " ") === target.replace(/-/g, " ") ||
+            name === target ||
+            name.replace(/-/g, " ") === target.replace(/-/g, " ")
+        );
+    });
+
+    const handleCategorySelect = (slug: string) => {
+        setSelectedCategory(slug);
+        setPage(1);
+        const params = new URLSearchParams(searchParams.toString());
+        if (slug) {
+            params.set("category", slug);
+        } else {
+            params.delete("category");
+        }
+        const qs = params.toString();
+        router.replace(qs ? `/shop?${qs}` : "/shop", { scroll: false });
+    };
 
     const products: Product[] = (data?.products ?? []).map((p: any) => {
         const primaryImage = p.product_images?.find((img: any) => img.is_primary)?.image_url
@@ -53,9 +90,7 @@ function ShopContent() {
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-8 border-b gap-4">
                 <div>
                     <h1 className="text-4xl font-bold tracking-tight text-foreground font-heading">
-                        {selectedCategory
-                            ? (categoriesData as any[])?.find((c: any) => c.slug === selectedCategory)?.name ?? "Shop"
-                            : "Shop All Plants"}
+                        {activeCategory?.name ?? (selectedCategory ? decodeURIComponent(selectedCategory) : "Shop All Plants")}
                     </h1>
                     <p className="text-muted-foreground mt-2">
                         {isLoading ? "Loading…" : `${data?.total ?? 0} products found`}
@@ -95,21 +130,24 @@ function ShopContent() {
                     variant={!selectedCategory ? "default" : "outline"}
                     size="sm"
                     className="shrink-0 rounded-full"
-                    onClick={() => { setSelectedCategory(""); setPage(1); }}
+                    onClick={() => handleCategorySelect("")}
                 >
                     All Plants
                 </Button>
-                {((categoriesData as any[]) ?? []).map((cat: any) => (
-                    <Button
-                        key={cat.id}
-                        variant={selectedCategory === cat.slug ? "default" : "outline"}
-                        size="sm"
-                        className="shrink-0 rounded-full"
-                        onClick={() => { setSelectedCategory(cat.slug); setPage(1); }}
-                    >
-                        {cat.name}
-                    </Button>
-                ))}
+                {((categoriesData as any[]) ?? []).map((cat: any) => {
+                    const isSelected = activeCategory ? activeCategory.id === cat.id : selectedCategory === cat.slug;
+                    return (
+                        <Button
+                            key={cat.id}
+                            variant={isSelected ? "default" : "outline"}
+                            size="sm"
+                            className="shrink-0 rounded-full"
+                            onClick={() => handleCategorySelect(cat.slug)}
+                        >
+                            {cat.name}
+                        </Button>
+                    );
+                })}
             </div>
 
             <div className="flex flex-col md:flex-row gap-8">
@@ -120,22 +158,25 @@ function ShopContent() {
                         <ul className="space-y-1">
                             <li>
                                 <button
-                                    onClick={() => { setSelectedCategory(""); setPage(1); }}
+                                    onClick={() => handleCategorySelect("")}
                                     className={`text-sm w-full text-left px-2 py-1.5 rounded-md transition-colors font-medium ${!selectedCategory ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
                                 >
                                     All Plants
                                 </button>
                             </li>
-                            {((categoriesData as any[]) ?? []).map((cat: any) => (
-                                <li key={cat.id}>
-                                    <button
-                                        onClick={() => { setSelectedCategory(cat.slug); setPage(1); }}
-                                        className={`text-sm w-full text-left px-2 py-1.5 rounded-md transition-colors ${selectedCategory === cat.slug ? "text-primary bg-primary/10 font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
-                                    >
-                                        {cat.name}
-                                    </button>
-                                </li>
-                            ))}
+                            {((categoriesData as any[]) ?? []).map((cat: any) => {
+                                const isSelected = activeCategory ? activeCategory.id === cat.id : selectedCategory === cat.slug;
+                                return (
+                                    <li key={cat.id}>
+                                        <button
+                                            onClick={() => handleCategorySelect(cat.slug)}
+                                            className={`text-sm w-full text-left px-2 py-1.5 rounded-md transition-colors ${isSelected ? "text-primary bg-primary/10 font-medium" : "text-muted-foreground hover:text-foreground hover:bg-muted"}`}
+                                        >
+                                            {cat.name}
+                                        </button>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </aside>

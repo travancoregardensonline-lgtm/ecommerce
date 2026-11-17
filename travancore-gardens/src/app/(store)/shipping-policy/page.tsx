@@ -160,9 +160,6 @@ export default function ShippingPolicyPage() {
                             📧 <strong>Email:</strong> <a href="mailto:support@travancoregardens.com" className="text-primary hover:underline">support@travancoregardens.com</a>
                         </p>
                         <p className="text-muted-foreground">
-                            📞 <strong>Phone:</strong> <a href="tel:+918078315506" className="text-primary hover:underline">+91 80783 15506</a>
-                        </p>
-                        <p className="text-muted-foreground">
                             📍 <strong>Warehouse / Nursery:</strong> Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
                         </p>
                     </div>

@@ -28,7 +28,7 @@ export function Footer() {
                         </p>
                         <div className="text-xs text-muted-foreground space-y-1">
                             <p><strong>Nursery &amp; Warehouse:</strong> Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India</p>
-                            <p><strong>Helpline:</strong> <a href="tel:+918078315506" className="hover:text-primary transition-colors">+91 80783 15506</a> | <strong>Email:</strong> <a href="mailto:support@travancoregardens.com" className="hover:text-primary transition-colors">support@travancoregardens.com</a></p>
+                            <p><strong>Email:</strong> <a href="mailto:support@travancoregardens.com" className="hover:text-primary transition-colors">support@travancoregardens.com</a></p>
                         </div>
                         <div className="flex space-x-4 pt-2">
                             <Button variant="ghost" size="icon" className="hover:text-primary" asChild>
@@ -51,7 +51,7 @@ export function Footer() {
 
                     {/* Quick Links */}
                     <div className="space-y-4">
-                        <h3 className="font-semibold text-foreground tracking-tight">Shop Plants</h3>
+                        <h3 className="font-semibold text-foreground tracking-tight">Shop Categories</h3>
                         <ul className="space-y-2">
                             <li>
                                 <Link href="/shop" className="text-sm text-muted-foreground hover:text-primary transition-colors">
@@ -59,23 +59,23 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=indoor" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Indoor Plants
+                                <Link href="/shop?category=flowering-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Flowering Plants
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=outdoor" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Outdoor Plants
+                                <Link href="/shop?category=fruits-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Fruits Plants
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/shop?category=accessories" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Pots &amp; Accessories
+                                <Link href="/shop?category=creeper-rose" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Creeper Rose
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/plant-care" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                                    Plant Care Guide
+                                <Link href="/shop?category=rose-plants" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                                    Rose Plants
                                 </Link>
                             </li>
                         </ul>

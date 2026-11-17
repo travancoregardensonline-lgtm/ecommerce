@@ -14,7 +14,6 @@ import { Heart } from "lucide-react";
 const navLinks = [
     { name: "Home", href: "/" },
     { name: "Shop", href: "/shop" },
-    { name: "Plant Care", href: "/plant-care" },
     { name: "About", href: "/about" },
 ];
 
