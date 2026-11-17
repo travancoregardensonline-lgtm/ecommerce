@@ -34,11 +34,6 @@ export function Navbar() {
 
     return (
         <header className="sticky top-0 z-50 w-full">
-            {/* Announcement Bar */}
-            <div className="bg-primary text-white py-2 text-[10px] font-black uppercase tracking-[0.25em] text-center hidden sm:block">
-                Free shipping on orders over ₹999 | Use Code: GREENHOME for 10% Off
-            </div>
-
             <nav className="w-full border-b bg-white/70 dark:bg-zinc-950/70 backdrop-blur-xl transition-all duration-300">
                 <div className="container mx-auto px-4 sm:px-8 lg:px-12">
                     <div className="flex h-16 sm:h-20 items-center justify-between">
