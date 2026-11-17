@@ -163,15 +163,15 @@ export function useDeleteCategory() {
 
 // ─── Orders ───────────────────────────────────────────────────────────────────
 
-export function useMyOrders() {
+export function useMyOrders(page = 1, limit = 10) {
     return useQuery({
-        queryKey: ["my-orders"],
+        queryKey: ["my-orders", page, limit],
         queryFn: async () => {
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return [];
+            if (!user) return { orders: [], total: 0 };
 
-            const { data, error } = await supabase
+            const { data, count, error } = await supabase
                 .from("orders")
                 .select(`
                     id, order_number, order_status, total_amount, payment_status, created_at,
@@ -180,12 +180,13 @@ export function useMyOrders() {
                         products(id, name, slug, product_images(image_url, is_primary))
                     ),
                     addresses(full_name, address_line1, city, state)
-                `)
+                `, { count: "exact" })
                 .eq("user_id", user.id)
-                .order("created_at", { ascending: false });
+                .order("created_at", { ascending: false })
+                .range((page - 1) * limit, page * limit - 1);
 
             if (error) throw toError(error);
-            return data ?? [];
+            return { orders: data ?? [], total: count ?? 0 };
         },
     });
 }
@@ -398,22 +399,28 @@ export function useSubmitReview() {
 
 // ─── Admin Hooks ──────────────────────────────────────────────────────────────
 
-export function useAdminProducts() {
+export function useAdminProducts(page = 1, limit = 10, search = "") {
     return useQuery({
-        queryKey: ["admin-products"],
+        queryKey: ["admin-products", page, limit, search],
         queryFn: async () => {
             const supabase = createClient();
-            const { data, error } = await supabase
+            let query = supabase
                 .from("products")
                 .select(`
                     *,
                     categories(name),
                     product_images(image_url, is_primary)
-                `)
-                .order("created_at", { ascending: false });
+                `, { count: "exact" })
+                .order("created_at", { ascending: false })
+                .range((page - 1) * limit, page * limit - 1);
 
+            if (search) {
+                query = query.ilike("name", `%${search}%`);
+            }
+
+            const { data, count, error } = await query;
             if (error) throw toError(error);
-            return data ?? [];
+            return { products: data ?? [], total: count ?? 0 };
         },
     });
 }
@@ -497,21 +504,40 @@ export function useDeleteProduct() {
     });
 }
 
-export function useAdminOrders() {
+export function useAdminOrders(page = 1, limit = 10, search = "") {
     return useQuery({
-        queryKey: ["admin-orders"],
+        queryKey: ["admin-orders", page, limit, search],
         queryFn: async () => {
             const supabase = createClient();
-            const { data, error } = await supabase
+            let query = supabase
                 .from("orders")
                 .select(`
                     *,
-                    profiles(name, email)
-                `)
-                .order("created_at", { ascending: false });
+                    profiles(name, email, phone),
+                    addresses(full_name, phone, address_line1, address_line2, city, state, pincode, country),
+                    order_items(
+                        *,
+                        products(name, sku, weight, product_images(image_url, is_primary))
+                    ),
+                    payments(transaction_id, payment_gateway, payment_status, amount, created_at)
+                `, { count: "exact" })
+                .order("created_at", { ascending: false })
+                .range((page - 1) * limit, page * limit - 1);
 
+            if (search) {
+                const { data: profiles } = await supabase.from('profiles').select('id').or(`name.ilike.%${search}%,email.ilike.%${search}%`);
+                const profileIds = profiles?.map(p => p.id) || [];
+                
+                if (profileIds.length > 0) {
+                    query = query.or(`order_number.ilike.%${search}%,user_id.in.(${profileIds.join(',')})`);
+                } else {
+                    query = query.ilike("order_number", `%${search}%`);
+                }
+            }
+
+            const { data, count, error } = await query;
             if (error) throw toError(error);
-            return data ?? [];
+            return { orders: data ?? [], total: count ?? 0 };
         },
     });
 }
@@ -532,21 +558,27 @@ export function useUpdateOrder() {
     });
 }
 
-export function useAdminCustomers() {
+export function useAdminCustomers(page = 1, limit = 10, search = "") {
     return useQuery({
-        queryKey: ["admin-customers"],
+        queryKey: ["admin-customers", page, limit, search],
         queryFn: async () => {
             const supabase = createClient();
-            const { data, error } = await supabase
+            let query = supabase
                 .from("profiles")
                 .select(`
                     *,
                     orders(count)
-                `)
-                .order("created_at", { ascending: false });
+                `, { count: "exact" })
+                .order("created_at", { ascending: false })
+                .range((page - 1) * limit, page * limit - 1);
 
+            if (search) {
+                query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,phone.ilike.%${search}%`);
+            }
+
+            const { data, count, error } = await query;
             if (error) throw toError(error);
-            return data ?? [];
+            return { customers: data ?? [], total: count ?? 0 };
         },
     });
 }
@@ -891,5 +923,62 @@ export function useDeleteBlogPost() {
             if (error) throw toError(error);
         },
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-blog-posts"] })
+    });
+}
+
+// ─── Print Templates ──────────────────────────────────────────────────────────
+
+export function usePrintTemplates(type?: string) {
+    return useQuery({
+        queryKey: ["print-templates", type],
+        queryFn: async () => {
+            const supabase = createClient();
+            let query = supabase.from("print_templates").select("*").order("created_at", { ascending: false });
+            if (type) {
+                query = query.eq("type", type);
+            }
+            const { data, error } = await query;
+            if (error) throw toError(error);
+            return data;
+        },
+    });
+}
+
+export function useCreatePrintTemplate() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const supabase = createClient();
+            const { data, error } = await supabase.from("print_templates").insert(payload).select().single();
+            if (error) throw toError(error);
+            return data;
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["print-templates"] })
+    });
+}
+
+export function useUpdatePrintTemplate() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+            const supabase = createClient();
+            // If setting to default, maybe unset others first, but for simplicity just update this one
+            const { data, error } = await supabase.from("print_templates").update(updates).eq("id", id).select().single();
+            if (error) throw toError(error);
+            return data;
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["print-templates"] })
+    });
+}
+
+export function useDeletePrintTemplate() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const supabase = createClient();
+            const { error } = await supabase.from("print_templates").delete().eq("id", id);
+            if (error) throw toError(error);
+        },
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["print-templates"] })
     });
 }

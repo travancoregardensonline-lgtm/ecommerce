@@ -32,8 +32,8 @@ export default function SettingsPage() {
         defaultShippingRate: "99",
     });
 
-    const { data: orders = [] } = useAdminOrders();
-    const { data: customers = [] } = useAdminCustomers();
+    const { data: { orders = [] } = {} } = useAdminOrders(1, 10000);
+    const { data: { customers = [] } = {} } = useAdminCustomers(1, 10000);
 
     const razorpayKeyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ?? "";
     const razorpayActive = razorpayKeyId.startsWith("rzp_");

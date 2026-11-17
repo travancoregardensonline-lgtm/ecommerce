@@ -64,10 +64,7 @@ export async function sendSentDMMessage(payload: SendMessagePayload): Promise<an
         return response.data;
     } catch (error: any) {
         const errorMsg = error.response?.data?.message || error.message || String(error);
-        console.error('❌ Failed to send message via sent.dm:', errorMsg);
-        if (error.response?.data) {
-            console.error('📦 Detailed error body:', JSON.stringify(error.response.data));
-        }
-        throw new Error(`sent.dm failed: ${errorMsg}`);
+        console.warn('⚠️ sent.dm message failed (non-critical):', errorMsg);
+        return null;
     }
 }

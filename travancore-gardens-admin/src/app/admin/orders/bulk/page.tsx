@@ -7,21 +7,10 @@ import { Printer, Package, Truck, Loader2, CheckCircle2, Download } from "lucide
 import { useAdminOrders, useUpdateOrder } from "@/hooks/useSupabase";
 import { toast } from "sonner";
 
-function generatePackingSlip(order: any): string {
-    const orderNumber = order.order_number ?? order.id.substring(0, 8).toUpperCase();
-    const items = order.order_items ?? [];
-    const addr = order.profiles;
-    return `<!DOCTYPE html><html><head><title>Packing Slip – ${orderNumber}</title>
-    <style>body{font-family:Arial,sans-serif;padding:32px;max-width:600px;margin:0 auto;}h1{font-size:20px;border-bottom:2px solid #000;padding-bottom:8px;}table{width:100%;border-collapse:collapse;margin-top:16px;}th,td{text-align:left;padding:8px;border-bottom:1px solid #ccc;}th{font-size:12px;text-transform:uppercase;color:#666;}.header{display:flex;justify-content:space-between;margin-bottom:24px;}</style></head>
-    <body><div class="header"><div><strong>🌿 Travancore Gardens</strong><br>Kerala, India</div><div style="text-align:right"><strong>PACKING SLIP</strong><br>Order #${orderNumber}</div></div>
-    <p><strong>Ship To:</strong> ${addr?.name ?? "Customer"}</p>
-    <table><thead><tr><th>Product</th><th>Qty</th></tr></thead><tbody>
-    ${items.map((i: any) => `<tr><td>${i.products?.name ?? "Plant"}</td><td>${i.quantity}</td></tr>`).join("")}
-    </tbody></table></body></html>`;
-}
+// generatePackingSlipHtml removed
 
 export default function BulkOrdersPage() {
-    const { data: orders = [], isLoading } = useAdminOrders();
+    const { data: { orders = [] } = {}, isLoading } = useAdminOrders(1, 10000);
     const updateOrder = useUpdateOrder();
     const [selected, setSelected] = useState<string[]>([]);
     const [statusFilter, setStatusFilter] = useState("all");
@@ -56,36 +45,27 @@ export default function BulkOrdersPage() {
 
     const handlePrintInvoices = () => {
         const selectedOrders = orders.filter((o: any) => selected.includes(o.id));
-        selectedOrders.forEach((order: any) => {
-            const orderNumber = order.order_number ?? order.id.substring(0, 8).toUpperCase();
-            const items = order.order_items ?? [];
-            const subtotal = items.reduce((s: number, i: any) => s + (Number(i.price) * Number(i.quantity)), 0);
-            const html = `<!DOCTYPE html><html><head><title>Invoice ${orderNumber}</title>
-            <style>body{font-family:Arial,sans-serif;padding:32px;max-width:720px;margin:0 auto;}h1{font-size:24px;color:#14532d;}table{width:100%;border-collapse:collapse;margin-top:16px;}th,td{text-align:left;padding:8px;border-bottom:1px solid #e8f5e9;}th{font-size:12px;text-transform:uppercase;color:#6b7280;}.total{font-weight:bold;font-size:16px;}</style></head>
-            <body><h1>🌿 Travancore Gardens</h1><p>Invoice #${orderNumber} · Date: ${new Date(order.created_at).toLocaleDateString("en-IN")}</p>
-            <table><thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead><tbody>
-            ${items.map((i: any) => `<tr><td>${i.products?.name ?? "Plant"}</td><td>${i.quantity}</td><td>₹${Number(i.price).toLocaleString("en-IN")}</td><td>₹${(Number(i.price) * Number(i.quantity)).toLocaleString("en-IN")}</td></tr>`).join("")}
-            </tbody></table><p class="total" style="margin-top:16px;">Total: ₹${Number(order.total_amount ?? subtotal).toLocaleString("en-IN")}</p></body></html>`;
-            const blob = new Blob([html], { type: "text/html" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url; a.download = `invoice-${orderNumber}.html`; a.click();
-            URL.revokeObjectURL(url);
-        });
+        if (selectedOrders.length === 0) return;
+        const ids = selectedOrders.map((o: any) => o.id).join(",");
+        window.open(`/admin/print/pdf-render?orders=${ids}&autoPrint=true&type=invoice`, '_blank');
     };
 
     const handlePrintPackingSlips = () => {
         const selectedOrders = orders.filter((o: any) => selected.includes(o.id));
-        selectedOrders.forEach((order: any) => {
-            const html = generatePackingSlip(order);
-            const blob = new Blob([html], { type: "text/html" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `packing-slip-${order.order_number ?? order.id.substring(0, 8)}.html`;
-            a.click();
-            URL.revokeObjectURL(url);
-        });
+        if (selectedOrders.length === 0) return;
+        const ids = selectedOrders.map((o: any) => o.id).join(",");
+        window.open(`/admin/print/pdf-render?orders=${ids}&autoPrint=true&type=packing_slip`, '_blank');
+    };
+
+    const handleDownloadPDF = () => {
+        const selectedOrders = orders.filter((o: any) => selected.includes(o.id));
+        if (selectedOrders.length === 0) return;
+        
+        // Let's download the first selected order as a PDF via API route
+        const ids = selectedOrders.map((o: any) => o.id).join(",");
+        // The API route currently takes a single orderId, let's just do the first one for demonstration, 
+        // or update the API to handle multiple. For now, first order:
+        window.open(`/api/pdf/generate?orderId=${selectedOrders[0].id}`, '_blank');
     };
 
     const statusColors: Record<string, string> = {
@@ -130,12 +110,15 @@ export default function BulkOrdersPage() {
             {selected.length > 0 && (
                 <div className="flex flex-wrap items-center gap-3 bg-primary/5 border border-primary/20 rounded-xl p-4">
                     <span className="font-semibold text-sm text-primary">{selected.length} order{selected.length > 1 ? "s" : ""} selected</span>
-                    <Button size="sm" variant="outline" className="gap-1.5" onClick={handlePrintInvoices}>
-                        <Printer className="h-4 w-4" /> Download Invoices
-                    </Button>
-                    <Button size="sm" variant="outline" className="gap-1.5" onClick={handlePrintPackingSlips}>
-                        <Package className="h-4 w-4" /> Packing Slips
-                    </Button>
+                            <Button variant="outline" className="gap-2" onClick={handlePrintPackingSlips} disabled={selected.length === 0}>
+                                <Printer className="h-4 w-4" /> Print Slips
+                            </Button>
+                            <Button variant="outline" className="gap-2" onClick={handlePrintInvoices} disabled={selected.length === 0}>
+                                <Printer className="h-4 w-4" /> Print Invoices
+                            </Button>
+                            <Button variant="outline" className="gap-2" onClick={handleDownloadPDF} disabled={selected.length === 0}>
+                                <Download className="h-4 w-4" /> Generate PDF
+                            </Button>
                     <div className="flex gap-2 ml-auto">
                         <Button size="sm" variant="outline" onClick={() => handleBulkStatusUpdate("processing")} disabled={updateOrder.isPending}>
                             Mark Processing

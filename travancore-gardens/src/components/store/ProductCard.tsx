@@ -75,7 +75,7 @@ export function ProductCard({ product }: { product: Product }) {
                 {/* Image Section */}
                 <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0 block">
                     <Image
-                        src={product.imageUrl || 'https://via.placeholder.com/300?text=No+Image'}
+                        src={product.imageUrl || 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&q=80&w=600'}
                         alt={product.name}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -85,7 +85,7 @@ export function ProductCard({ product }: { product: Product }) {
                     {/* Floating Badge (Sale) */}
                     {product.salePrice && (
                         <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg z-10 uppercase tracking-widest backdrop-blur-md bg-opacity-90">
-                            Offer
+                            {Math.round(((product.price - product.salePrice) / product.price) * 100)}% OFF
                         </div>
                     )}
 

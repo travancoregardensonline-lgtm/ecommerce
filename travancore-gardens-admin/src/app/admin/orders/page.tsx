@@ -12,6 +12,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+    PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination";
 
 import { useAdminOrders, useUpdateOrder } from "@/hooks/useSupabase";
 import { Loader2, Package } from "lucide-react";
@@ -40,9 +44,12 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function AdminOrdersPage() {
-    const { data: orders = [], isLoading } = useAdminOrders();
-    const updateOrder = useUpdateOrder();
+    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    
+    // Server-side pagination and search
+    const { data: { orders = [], total = 0 } = {}, isLoading } = useAdminOrders(page, 10, search);
+    const updateOrder = useUpdateOrder();
 
     const handleStatusChange = async (orderId: string, newStatus: string) => {
         try {
@@ -53,11 +60,8 @@ export default function AdminOrdersPage() {
         }
     };
 
-    const filteredOrders = orders.filter(o =>
-        o.order_number?.toLowerCase().includes(search.toLowerCase()) ||
-        o.profiles?.name?.toLowerCase().includes(search.toLowerCase()) ||
-        o.profiles?.email?.toLowerCase().includes(search.toLowerCase())
-    );
+    // Local filtering removed in favor of server-side search
+    const filteredOrders = orders;
 
     return (
         <div className="space-y-6">
@@ -80,7 +84,7 @@ export default function AdminOrdersPage() {
                         placeholder="Search orders by ID, Customer Name..."
                         className="pl-9 bg-background"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                     />
                 </div>
                 <Button variant="outline" className="shrink-0 gap-2">
@@ -125,8 +129,10 @@ export default function AdminOrdersPage() {
                                         })}
                                     </TableCell>
                                     <TableCell>
-                                        <div className="font-medium">{order.profiles?.name ?? "Guest User"}</div>
-                                        <div className="text-xs text-muted-foreground">{order.profiles?.email}</div>
+                                        <div className="font-medium">{order.profiles?.name ?? order.addresses?.full_name ?? "Guest Customer"}</div>
+                                        <div className="text-xs text-muted-foreground">
+                                            {order.profiles?.email || order.addresses?.phone || "Guest"}
+                                        </div>
                                     </TableCell>
                                     <TableCell className="font-medium">₹{order.total_amount.toLocaleString("en-IN")}</TableCell>
                                     <TableCell>
@@ -159,6 +165,60 @@ export default function AdminOrdersPage() {
                     </Table>
                 )}
             </div>
+
+            {/* Pagination */}
+            {total > 10 && (
+                <div className="flex justify-center mt-6">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                            
+                            {Array.from({ length: Math.ceil(total / 10) }).map((_, i) => {
+                                const pageNum = i + 1;
+                                const totalPages = Math.ceil(total / 10);
+                                
+                                if (
+                                    pageNum === 1 || 
+                                    pageNum === totalPages ||
+                                    (pageNum >= page - 1 && pageNum <= page + 1)
+                                ) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationLink 
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                                className="cursor-pointer"
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                }
+                                if (pageNum === page - 2 || pageNum === page + 2) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationEllipsis />
+                                        </PaginationItem>
+                                    );
+                                }
+                                return null;
+                            })}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPage(p => Math.min(Math.ceil(total / 10), p + 1))}
+                                    className={page >= Math.ceil(total / 10) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     );
 }

@@ -53,6 +53,7 @@ const sidebarGroups = [
             { name: "Blog CMS", href: "/admin/blog", icon: Newspaper },
             { name: "Shipping", href: "/admin/shipping", icon: Truck },
             { name: "Settings", href: "/admin/settings", icon: Settings },
+            { name: "Package Slips", href: "/admin/settings/packing-slips", icon: FileText },
         ]
     },
 ];

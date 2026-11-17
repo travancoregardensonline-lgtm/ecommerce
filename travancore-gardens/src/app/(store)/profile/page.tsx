@@ -8,9 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import {
+    Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+    PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination";
 import { OrderCard } from "@/components/store/OrderCard";
 import { AddressCard } from "@/components/store/AddressCard";
+import { ProductCard } from "@/components/store/ProductCard";
 import { useAuthStore } from "@/store/authStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useMyProfile, useUpdateProfile, useMyOrders, useMyAddresses, useSaveAddress, useDeleteAddress } from "@/hooks/useSupabase";
 import { authActions } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/client";
@@ -35,13 +41,23 @@ export default function ProfilePage() {
     const [profileForm, setProfileForm] = useState({ name: "", phone: "" });
     const [formInit, setFormInit] = useState(false);
 
+    const [ordersPage, setOrdersPage] = useState(1);
+    const [wishlistPage, setWishlistPage] = useState(1);
+
     // ── Supabase data hooks ────────────────────────────────────────
     const { data: profile, isLoading: profileLoading } = useMyProfile();
-    const { data: orders, isLoading: ordersLoading } = useMyOrders();
+    const { data: { orders = [], total: totalOrders = 0 } = {}, isLoading: ordersLoading } = useMyOrders(ordersPage, 5);
     const { data: addresses, isLoading: addressesLoading } = useMyAddresses();
     const updateProfile = useUpdateProfile();
     const saveAddress = useSaveAddress();
     const deleteAddress = useDeleteAddress();
+    const wishlist = useWishlistStore();
+    const wishlistItems = wishlist.items;
+    
+    // Client-side pagination for wishlist
+    const WISHLIST_LIMIT = 8;
+    const totalWishlist = wishlistItems.length;
+    const paginatedWishlist = wishlistItems.slice((wishlistPage - 1) * WISHLIST_LIMIT, wishlistPage * WISHLIST_LIMIT);
 
     // Sync profile form once data loads
     if (profile && !formInit) {
@@ -49,9 +65,12 @@ export default function ProfilePage() {
         setFormInit(true);
     }
 
+    const displayName = profile?.name || user?.email?.split("@")[0] || "My Account";
+    const displayEmailOrPhone = user?.email || profile?.phone || "Add contact info";
+
     const initials = (() => {
-        const name = profile?.name ?? user?.email ?? "?";
-        return name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
+        const nameToUse = profile?.name || user?.email || "?";
+        return nameToUse.split(" ").filter(Boolean).map((n: string) => n[0]).join("").toUpperCase().slice(0, 2) || "?";
     })();
 
     const handleSignOut = async () => {
@@ -91,10 +110,10 @@ export default function ProfilePage() {
                                 {profileLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : initials}
                             </div>
                             <h2 className="text-xl font-bold text-center">
-                                {profile?.name ?? user?.email?.split("@")[0] ?? "My Account"}
+                                {displayName}
                             </h2>
-                            <p className="text-sm text-muted-foreground mt-1 text-center truncate w-full text-center px-2">
-                                {user?.email ?? profile?.phone ?? ""}
+                            <p className="text-sm text-muted-foreground mt-1 text-center truncate w-full px-2">
+                                {displayEmailOrPhone}
                             </p>
                         </div>
 
@@ -203,6 +222,54 @@ export default function ProfilePage() {
                                             }))}
                                         />
                                     ))}
+                                    
+                                    {totalOrders > 5 && (
+                                        <div className="flex justify-center mt-8">
+                                            <Pagination>
+                                                <PaginationContent>
+                                                    <PaginationItem>
+                                                        <PaginationPrevious
+                                                            onClick={() => setOrdersPage(p => Math.max(1, p - 1))}
+                                                            className={ordersPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                        />
+                                                    </PaginationItem>
+                                                    {Array.from({ length: Math.ceil(totalOrders / 5) }).map((_, i) => {
+                                                        const pageNum = i + 1;
+                                                        if (
+                                                            pageNum === 1 || pageNum === Math.ceil(totalOrders / 5) ||
+                                                            (pageNum >= ordersPage - 1 && pageNum <= ordersPage + 1)
+                                                        ) {
+                                                            return (
+                                                                <PaginationItem key={pageNum}>
+                                                                    <PaginationLink 
+                                                                        isActive={ordersPage === pageNum}
+                                                                        onClick={() => setOrdersPage(pageNum)}
+                                                                        className="cursor-pointer"
+                                                                    >
+                                                                        {pageNum}
+                                                                    </PaginationLink>
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+                                                        if (pageNum === ordersPage - 2 || pageNum === ordersPage + 2) {
+                                                            return (
+                                                                <PaginationItem key={pageNum}>
+                                                                    <PaginationEllipsis />
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })}
+                                                    <PaginationItem>
+                                                        <PaginationNext
+                                                            onClick={() => setOrdersPage(p => Math.min(Math.ceil(totalOrders / 5), p + 1))}
+                                                            className={ordersPage >= Math.ceil(totalOrders / 5) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                        />
+                                                    </PaginationItem>
+                                                </PaginationContent>
+                                            </Pagination>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -256,11 +323,72 @@ export default function ProfilePage() {
 
                     {/* Wishlist */}
                     {activeTab === "wishlist" && (
-                        <div className="bg-card border border-border/50 rounded-xl p-6 sm:p-8 text-center py-20">
-                            <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-50" />
-                            <h2 className="text-xl font-bold mb-2">Your wishlist is empty</h2>
-                            <p className="text-muted-foreground mb-4">Save your favourite plants to buy them later.</p>
-                            <Button asChild><a href="/shop">Browse Plants</a></Button>
+                        <div className="bg-card border border-border/50 rounded-xl p-6 sm:p-8">
+                            <h2 className="text-2xl font-bold font-heading mb-6">Your Wishlist</h2>
+                            {wishlistItems.length === 0 ? (
+                                <div className="text-center py-16">
+                                    <Heart className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-50" />
+                                    <h3 className="font-semibold text-lg mb-1">Your wishlist is empty</h3>
+                                    <p className="text-muted-foreground mb-4">Save your favourite plants to buy them later.</p>
+                                    <Button asChild><a href="/shop">Browse Plants</a></Button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                                        {paginatedWishlist.map((product) => (
+                                            <ProductCard key={product.id} product={product} />
+                                        ))}
+                                    </div>
+                                    
+                                    {totalWishlist > WISHLIST_LIMIT && (
+                                        <div className="flex justify-center mt-8">
+                                            <Pagination>
+                                                <PaginationContent>
+                                                    <PaginationItem>
+                                                        <PaginationPrevious
+                                                            onClick={() => setWishlistPage(p => Math.max(1, p - 1))}
+                                                            className={wishlistPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                        />
+                                                    </PaginationItem>
+                                                    {Array.from({ length: Math.ceil(totalWishlist / WISHLIST_LIMIT) }).map((_, i) => {
+                                                        const pageNum = i + 1;
+                                                        if (
+                                                            pageNum === 1 || pageNum === Math.ceil(totalWishlist / WISHLIST_LIMIT) ||
+                                                            (pageNum >= wishlistPage - 1 && pageNum <= wishlistPage + 1)
+                                                        ) {
+                                                            return (
+                                                                <PaginationItem key={pageNum}>
+                                                                    <PaginationLink 
+                                                                        isActive={wishlistPage === pageNum}
+                                                                        onClick={() => setWishlistPage(pageNum)}
+                                                                        className="cursor-pointer"
+                                                                    >
+                                                                        {pageNum}
+                                                                    </PaginationLink>
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+                                                        if (pageNum === wishlistPage - 2 || pageNum === wishlistPage + 2) {
+                                                            return (
+                                                                <PaginationItem key={pageNum}>
+                                                                    <PaginationEllipsis />
+                                                                </PaginationItem>
+                                                            );
+                                                        }
+                                                        return null;
+                                                    })}
+                                                    <PaginationItem>
+                                                        <PaginationNext
+                                                            onClick={() => setWishlistPage(p => Math.min(Math.ceil(totalWishlist / WISHLIST_LIMIT), p + 1))}
+                                                            className={wishlistPage >= Math.ceil(totalWishlist / WISHLIST_LIMIT) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                                        />
+                                                    </PaginationItem>
+                                                </PaginationContent>
+                                            </Pagination>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     )}
 

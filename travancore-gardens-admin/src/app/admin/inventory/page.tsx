@@ -7,7 +7,7 @@ import { AlertTriangle, Package, ArrowDown, Loader2 } from "lucide-react";
 import { useAdminProducts, useUpdateProduct } from "@/hooks/useSupabase";
 
 export default function InventoryPage() {
-    const { data: products = [], isLoading } = useAdminProducts();
+    const { data: { products = [] } = {}, isLoading } = useAdminProducts(1, 10000);
     const updateProduct = useUpdateProduct();
     const [search, setSearch] = useState("");
 

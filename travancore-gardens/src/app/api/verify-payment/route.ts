@@ -111,6 +111,16 @@ export async function POST(req: Request) {
             const estimatedH = Math.ceil(totalVolume / footprint);
             const finalH = Math.max(estimatedH, 20);
 
+            let guestEmail = "orders@travancoregardens.com";
+            if (orderDB.notes) {
+                try {
+                    const parsed = JSON.parse(orderDB.notes);
+                    if (parsed.email) guestEmail = parsed.email;
+                } catch {
+                    // Plain notes
+                }
+            }
+
             const pickupLocation = process.env.SHIPROCKET_PICKUP_LOCATION || "ambalathinkala warehouse";
             const shiprocketPayload = {
                 order_id: `TG-${supabase_order_id.substring(0, 8).toUpperCase()}`,
@@ -124,7 +134,7 @@ export async function POST(req: Request) {
                 billing_pincode: orderDB.addresses?.pincode || "000000",
                 billing_state: orderDB.addresses?.state || "N/A",
                 billing_country: orderDB.addresses?.country || "India",
-                billing_email: orderDB.profiles?.email || "orders@trvancogardens.com",
+                billing_email: orderDB.profiles?.email || guestEmail,
                 billing_phone: orderDB.addresses?.phone || orderDB.profiles?.phone || "0000000000",
                 shipping_is_billing: true,
                 order_items: (orderDB.order_items || []).map((item: any, idx: number) => ({

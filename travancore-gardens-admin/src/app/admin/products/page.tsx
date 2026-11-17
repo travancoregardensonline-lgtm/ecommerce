@@ -11,24 +11,30 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+    PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination";
 
-import { useAdminProducts, useDeleteProduct } from "@/hooks/useSupabase";
+import { useAdminProducts, useDeleteProduct, useCreateProduct } from "@/hooks/useSupabase";
 import { useState } from "react";
 import { ProductModal } from "@/components/admin/ProductModal";
 
 export default function AdminProductsPage() {
-    const { data: products = [], isLoading } = useAdminProducts();
-    const deleteProduct = useDeleteProduct();
+    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    
+    const { data: { products = [], total = 0 } = {}, isLoading } = useAdminProducts(page, 10, search);
+    const deleteProduct = useDeleteProduct();
+    const createProduct = useCreateProduct();
+    const [isSeeding, setIsSeeding] = useState(false);
 
     // Modal states
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<any | null>(null);
 
-    const filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.sku?.toLowerCase().includes(search.toLowerCase())
-    );
+    // Local filtering removed in favor of server-side search
+    const filteredProducts = products;
 
     const handleAdd = () => {
         setEditingProduct(null);
@@ -51,6 +57,35 @@ export default function AdminProductsPage() {
         }
     };
 
+    const handleSeed = async () => {
+        if (confirm("Are you sure you want to add 15 mock products?")) {
+            setIsSeeding(true);
+            try {
+                for (let i = 1; i <= 15; i++) {
+                    const randomNum = Math.floor(Math.random() * 10000);
+                    await createProduct.mutateAsync({
+                        product: {
+                            name: `Mock Pagination Plant ${randomNum} - ${i}`,
+                            slug: `mock-pagination-plant-${randomNum}-${i}`,
+                            description: 'This is a mock product generated to test pagination features in the admin dashboard and shop.',
+                            price: Math.floor(Math.random() * 1000) + 100,
+                            stock: Math.floor(Math.random() * 50) + 10,
+                            is_active: true,
+                            sku: `MOCK-PG-${randomNum}-${i}`
+                        },
+                        image_urls: ['https://images.pexels.com/photos/6913087/pexels-photo-6913087.jpeg?auto=compress&cs=tinysrgb&w=600']
+                    });
+                }
+                alert("Successfully added 15 mock products!");
+            } catch (err) {
+                console.error("Failed to seed", err);
+                alert("Failed to seed products.");
+            } finally {
+                setIsSeeding(false);
+            }
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -58,9 +93,14 @@ export default function AdminProductsPage() {
                     <h1 className="text-3xl font-bold font-heading text-foreground tracking-tight">Products {products.length > 0 && `(${products.length})`}</h1>
                     <p className="text-muted-foreground mt-1">Manage your store&apos;s inventory and product listings.</p>
                 </div>
-                <Button className="shrink-0 gap-2" onClick={handleAdd}>
-                    <Plus className="h-4 w-4" /> Add Product
-                </Button>
+                <div className="flex gap-2">
+                    <Button variant="secondary" className="shrink-0 gap-2" onClick={handleSeed} disabled={isSeeding}>
+                        {isSeeding ? <Loader2 className="h-4 w-4 animate-spin" /> : <Package className="h-4 w-4" />} Seed 15 Products
+                    </Button>
+                    <Button className="shrink-0 gap-2" onClick={handleAdd}>
+                        <Plus className="h-4 w-4" /> Add Product
+                    </Button>
+                </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -70,7 +110,7 @@ export default function AdminProductsPage() {
                         placeholder="Search products by name or SKU..."
                         className="pl-9 bg-background"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                     />
                 </div>
                 <Button variant="outline" className="shrink-0 gap-2">
@@ -150,6 +190,60 @@ export default function AdminProductsPage() {
                     </Table>
                 )}
             </div>
+
+            {/* Pagination */}
+            {total > 10 && (
+                <div className="flex justify-center mt-6">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                            
+                            {Array.from({ length: Math.ceil(total / 10) }).map((_, i) => {
+                                const pageNum = i + 1;
+                                const totalPages = Math.ceil(total / 10);
+                                
+                                if (
+                                    pageNum === 1 || 
+                                    pageNum === totalPages ||
+                                    (pageNum >= page - 1 && pageNum <= page + 1)
+                                ) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationLink 
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                                className="cursor-pointer"
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                }
+                                if (pageNum === page - 2 || pageNum === page + 2) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationEllipsis />
+                                        </PaginationItem>
+                                    );
+                                }
+                                return null;
+                            })}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPage(p => Math.min(Math.ceil(total / 10), p + 1))}
+                                    className={page >= Math.ceil(total / 10) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
 
             <ProductModal
                 isOpen={isModalOpen}

@@ -413,7 +413,7 @@ export default function AdminShiprocketPage() {
     const [page, setPage] = useState(1);
     const [orderSearch, setOrderSearch] = useState("");
     const { data: srData, isLoading, error, refetch, isFetching } = useShiprocketOrders(page);
-    const { data: supaOrders = [] } = useAdminOrders();
+    const { data: { orders: supaOrders = [] } = {} } = useAdminOrders(1, 10000);
 
     const srOrders: any[] = srData?.data ?? [];
     const totalPages = srData?.meta?.last_page ?? 1;

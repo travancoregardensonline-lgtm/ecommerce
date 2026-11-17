@@ -13,15 +13,22 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+    Pagination, PaginationContent, PaginationEllipsis, PaginationItem,
+    PaginationLink, PaginationNext, PaginationPrevious,
+} from "@/components/ui/pagination";
 
 import { useAdminCustomers } from "@/hooks/useSupabase";
 import { Loader2, Users as UsersIcon } from "lucide-react";
 import { useState } from "react";
 
 export default function AdminCustomersPage() {
-    const { data: customers = [], isLoading } = useAdminCustomers();
-    const { data: allOrders = [] } = useAdminOrders();
+    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    
+    const { data: { customers = [], total = 0 } = {}, isLoading } = useAdminCustomers(page, 10, search);
+    // Fetch a large limit of orders just for the spend map calculation for now
+    const { data: { orders: allOrders = [] } = {} } = useAdminOrders(1, 10000);
 
     // Build a map of customer id -> order count
     const orderCountMap = allOrders.reduce((acc: Record<string, number>, order: any) => {
@@ -39,10 +46,8 @@ export default function AdminCustomersPage() {
         return acc;
     }, {});
 
-    const filteredCustomers = customers.filter(c =>
-        c.name?.toLowerCase().includes(search.toLowerCase()) ||
-        c.email?.toLowerCase().includes(search.toLowerCase())
-    );
+    // Local filtering removed in favor of server-side search
+    const filteredCustomers = customers;
 
     const handleExport = () => {
         if (customers.length === 0) return;
@@ -80,7 +85,7 @@ export default function AdminCustomersPage() {
                         placeholder="Search customers by name or email..."
                         className="pl-9 bg-background"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                     />
                 </div>
                 <Button variant="outline" className="shrink-0 gap-2">
@@ -145,6 +150,60 @@ export default function AdminCustomersPage() {
                     </Table>
                 )}
             </div>
+
+            {/* Pagination */}
+            {total > 10 && (
+                <div className="flex justify-center mt-6">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                                    className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                            
+                            {Array.from({ length: Math.ceil(total / 10) }).map((_, i) => {
+                                const pageNum = i + 1;
+                                const totalPages = Math.ceil(total / 10);
+                                
+                                if (
+                                    pageNum === 1 || 
+                                    pageNum === totalPages ||
+                                    (pageNum >= page - 1 && pageNum <= page + 1)
+                                ) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationLink 
+                                                isActive={page === pageNum}
+                                                onClick={() => setPage(pageNum)}
+                                                className="cursor-pointer"
+                                            >
+                                                {pageNum}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                }
+                                if (pageNum === page - 2 || pageNum === page + 2) {
+                                    return (
+                                        <PaginationItem key={pageNum}>
+                                            <PaginationEllipsis />
+                                        </PaginationItem>
+                                    );
+                                }
+                                return null;
+                            })}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPage(p => Math.min(Math.ceil(total / 10), p + 1))}
+                                    className={page >= Math.ceil(total / 10) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     );
 }

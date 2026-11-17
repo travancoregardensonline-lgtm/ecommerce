@@ -267,15 +267,15 @@ export function useDeleteCategory() {
 
 // ─── Orders ───────────────────────────────────────────────────────────────────
 
-export function useMyOrders() {
+export function useMyOrders(page = 1, limit = 10) {
     return useQuery({
-        queryKey: ["my-orders"],
+        queryKey: ["my-orders", page, limit],
         queryFn: async () => {
             const supabase = createClient();
             const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return [];
+            if (!user) return { orders: [], total: 0 };
 
-            const { data, error } = await supabase
+            const { data, count, error } = await supabase
                 .from("orders")
                 .select(`
                     id, order_number, order_status, total_amount, payment_status, created_at,
@@ -284,12 +284,13 @@ export function useMyOrders() {
                         products(id, name, slug, product_images(image_url, is_primary))
                     ),
                     addresses(full_name, address_line1, city, state)
-                `)
+                `, { count: "exact" })
                 .eq("user_id", user.id)
-                .order("created_at", { ascending: false });
+                .order("created_at", { ascending: false })
+                .range((page - 1) * limit, page * limit - 1);
 
             if (error) throw toError(error);
-            return data ?? [];
+            return { orders: data ?? [], total: count ?? 0 };
         },
     });
 }
@@ -298,22 +299,12 @@ export function useOrder(orderId: string) {
     return useQuery({
         queryKey: ["order", orderId],
         queryFn: async () => {
-            const supabase = createClient();
-            const { data, error } = await supabase
-                .from("orders")
-                .select(`
-                    *,
-                    order_items(
-                        id, quantity, price,
-                        products(id, name, slug, product_images(image_url, is_primary))
-                    ),
-                    addresses(*)
-                `)
-                .eq("id", orderId)
-                .maybeSingle();
-
-            if (error) throw toError(error);
-            return data;
+            const res = await fetch(`/api/orders/${orderId}`);
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || "Failed to load order");
+            }
+            return res.json();
         },
         enabled: !!orderId,
     });

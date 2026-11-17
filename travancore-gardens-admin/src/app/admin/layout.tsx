@@ -10,8 +10,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const pathname = usePathname();
 
-    // Admin login page has its own full-page layout — no sidebar/topbar
-    if (pathname === "/admin/login") {
+    // Admin login page and PDF render page have their own full-page layout — no sidebar/topbar
+    if (pathname === "/admin/login" || pathname === "/admin/print/pdf-render") {
         return <>{children}</>;
     }
 
