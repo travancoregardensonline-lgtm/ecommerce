@@ -50,6 +50,7 @@ const sidebarGroups = [
     {
         label: "Content & Config",
         links: [
+            { name: "Banners", href: "/admin/banners", icon: ImageIcon },
             { name: "Blog CMS", href: "/admin/blog", icon: Newspaper },
             { name: "Shipping", href: "/admin/shipping", icon: Truck },
             { name: "Settings", href: "/admin/settings", icon: Settings },

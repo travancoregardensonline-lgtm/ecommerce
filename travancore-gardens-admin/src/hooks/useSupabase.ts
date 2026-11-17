@@ -94,6 +94,88 @@ export function useFeaturedProducts(limit = 8) {
     });
 }
 
+// ─── Banners ──────────────────────────────────────────────────────────────────
+
+export function useBanners() {
+    return useQuery({
+        queryKey: ["banners"],
+        queryFn: async () => {
+            const supabase = createClient();
+            const { data, error } = await supabase
+                .from("banners")
+                .select("*")
+                .eq("is_active", true)
+                .order("created_at", { ascending: false });
+
+            if (error) throw toError(error);
+            return data ?? [];
+        },
+    });
+}
+
+export function useAdminBanners() {
+    return useQuery({
+        queryKey: ["admin-banners"],
+        queryFn: async () => {
+            const supabase = createClient();
+            const { data, error } = await supabase
+                .from("banners")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) throw toError(error);
+            return data ?? [];
+        },
+    });
+}
+
+export function useCreateBanner() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (payload: any) => {
+            const supabase = createClient();
+            const { data, error } = await supabase.from("banners").insert(payload).select().single();
+            if (error) throw toError(error);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+            queryClient.invalidateQueries({ queryKey: ["banners"] });
+        }
+    });
+}
+
+export function useUpdateBanner() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, updates }: { id: string; updates: any }) => {
+            const supabase = createClient();
+            const { data, error } = await supabase.from("banners").update(updates).eq("id", id).select().single();
+            if (error) throw toError(error);
+            return data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+            queryClient.invalidateQueries({ queryKey: ["banners"] });
+        }
+    });
+}
+
+export function useDeleteBanner() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const supabase = createClient();
+            const { error } = await supabase.from("banners").delete().eq("id", id);
+            if (error) throw toError(error);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+            queryClient.invalidateQueries({ queryKey: ["banners"] });
+        }
+    });
+}
+
 // ─── Categories ───────────────────────────────────────────────────────────────
 
 export function useCategories() {
