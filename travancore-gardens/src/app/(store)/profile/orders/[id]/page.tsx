@@ -137,7 +137,7 @@ function generateInvoiceHTML(order: any): string {
                 </div>
                 <div style="margin-top:16px;font-size:12px;color:#6b7280;line-height:1.7;">
                     Kerala, India<br>
-                    support@travancoregardens.com
+                    travancoregardensonline@gmail.com
                 </div>
             </div>
             <div class="invoice-meta">
@@ -197,7 +197,7 @@ function generateInvoiceHTML(order: any): string {
         <div class="footer">
             <p>
                 Thank you for shopping with Travancore Gardens 🌿<br>
-                All plants are lovingly packed with care. For support, reach us at support@travancoregardens.com<br>
+                All plants are lovingly packed with care. For support, reach us at travancoregardensonline@gmail.com<br>
                 This is a computer-generated invoice and does not require a signature.
             </p>
         </div>

@@ -58,7 +58,7 @@ function generateInvoiceHTML(order: any): string {
                 <div class="brand-name"><img src="/logo.png" style="height:32px;width:auto;vertical-align:middle;margin-right:8px;display:inline-block;" alt="Logo" />Travancore Gardens</div>
                 <div class="brand-sub">Premium Indoor Plants · Kerala, India</div>
                 <div style="margin-top:16px;font-size:12px;color:#6b7280;line-height:1.8;">
-                    support@travancoregardens.com
+                    travancoregardensonline@gmail.com
                 </div>
             </div>
             <div style="text-align:right;">
@@ -102,7 +102,7 @@ function generateInvoiceHTML(order: any): string {
         </div>
         <div class="footer">
             Thank you for shopping with Travancore Gardens 🌿<br>
-            For support: support@travancoregardens.com · This is a computer-generated invoice.
+            For support: travancoregardensonline@gmail.com · This is a computer-generated invoice.
         </div>
     </div>
 </body>

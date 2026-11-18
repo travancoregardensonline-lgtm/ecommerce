@@ -157,7 +157,7 @@ export default function ShippingPolicyPage() {
                     <div className="bg-card border rounded-xl p-5 space-y-2 text-sm">
                         <p className="font-semibold text-foreground">Travancore Gardens Logistics Desk</p>
                         <p className="text-muted-foreground">
-                            📧 <strong>Email:</strong> <a href="mailto:support@travancoregardens.com" className="text-primary hover:underline">support@travancoregardens.com</a>
+                            📧 <strong>Email:</strong> <a href="mailto:travancoregardensonline@gmail.com" className="text-primary hover:underline">travancoregardensonline@gmail.com</a>
                         </p>
                         <p className="text-muted-foreground">
                             📍 <strong>Warehouse / Nursery:</strong> Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India

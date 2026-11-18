@@ -28,7 +28,7 @@ export function Footer() {
                         </p>
                         <div className="text-xs text-muted-foreground space-y-1">
                             <p><strong>Nursery &amp; Warehouse:</strong> Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India</p>
-                            <p><strong>Email:</strong> <a href="mailto:support@travancoregardens.com" className="hover:text-primary transition-colors">support@travancoregardens.com</a></p>
+                            <p><strong>Email:</strong> <a href="mailto:travancoregardensonline@gmail.com" className="hover:text-primary transition-colors">travancoregardensonline@gmail.com</a></p>
                         </div>
                         <div className="flex space-x-4 pt-2">
                             <Button variant="ghost" size="icon" className="hover:text-primary" asChild>

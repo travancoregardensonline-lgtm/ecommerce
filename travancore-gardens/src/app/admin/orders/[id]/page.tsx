@@ -136,7 +136,7 @@ function generateInvoice(order: any) {
   <div>
     <div class="brand"><img src="/logo.png" style="height:32px;width:auto;vertical-align:middle;margin-right:8px;display:inline-block;" alt="Logo" />Travancore Gardens</div>
     <div style="font-size:12px;color:#666;margin-top:4px;">Premium Plants &amp; Accessories</div>
-    <div style="font-size:12px;color:#666;">Kerala, India • orders@travancoregardens.in</div>
+    <div style="font-size:12px;color:#666;">Kerala, India • travancoregardensonline@gmail.com</div>
   </div>
   <div style="text-align:right">
     <div class="badge">TAX INVOICE</div>
@@ -186,7 +186,7 @@ function generateInvoice(order: any) {
 
 <div style="margin-top:32px;padding:16px;background:#f8fcf8;border-radius:8px;font-size:12px;color:#666;text-align:center;">
   Thank you for choosing Travancore Gardens! 🌿<br>
-  For queries: orders@travancoregardens.in | Returns: within 7 days of delivery
+  For queries: travancoregardensonline@gmail.com | Returns: within 7 days of delivery
 </div>
 </body></html>`;
 

@@ -155,8 +155,8 @@ export default function ContactPage() {
                                 <div>
                                     <h3 className="font-semibold text-foreground">Official Email</h3>
                                     <p className="text-muted-foreground mt-0.5">
-                                        <a href="mailto:support@travancoregardens.com" className="text-primary font-medium hover:underline">
-                                            support@travancoregardens.com
+                                        <a href="mailto:travancoregardensonline@gmail.com" className="text-primary font-medium hover:underline">
+                                            travancoregardensonline@gmail.com
                                         </a>
                                     </p>
                                     <p className="text-xs text-muted-foreground mt-0.5">Response within 24 business hours</p>
@@ -202,7 +202,7 @@ export default function ContactPage() {
                         </p>
                         <p className="text-xs text-muted-foreground mt-2">
                             <strong>Officer:</strong> Grievance Officer, Travancore Gardens<br />
-                            <strong>Email:</strong> grievance@travancoregardens.com<br />
+                            <strong>Email:</strong> travancoregardensonline@gmail.com<br />
                             <strong>Address:</strong> Ambalathinkala, Kattakkada, Kerala – 695572
                         </p>
                     </div>

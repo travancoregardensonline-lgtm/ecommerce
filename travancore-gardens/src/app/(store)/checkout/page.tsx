@@ -245,7 +245,7 @@ export default function CheckoutPage() {
                 weight: totalWeight,
                 customer_details: {
                     full_name: form.full_name || profile?.name || "Customer",
-                    email: user?.email || form.email || "orders@travancoregardens.com",
+                    email: user?.email || form.email || "travancoregardensonline@gmail.com",
                     phone: form.phone || profile?.phone || "",
                 },
                 items: items.map((i) => ({
@@ -284,7 +284,7 @@ export default function CheckoutPage() {
             }
 
             const customerName = form.full_name || profile?.name || "Customer";
-            const customerEmail = user?.email || form.email || "orders@travancoregardens.com";
+            const customerEmail = user?.email || form.email || "travancoregardensonline@gmail.com";
             const customerPhone = form.phone || profile?.phone || "";
 
             const options = {

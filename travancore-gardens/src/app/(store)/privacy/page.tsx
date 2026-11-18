@@ -68,7 +68,7 @@ We retain order records for the duration required by Indian accounting, tax (GST
 • Right to Access: Request a copy of the personal information we maintain about you.
 • Right to Correction: Request correction of outdated or incorrect contact/shipping information.
 • Right to Opt-out: Unsubscribe from promotional email newsletters at any time.
-• Right to Deletion: Request removal of your customer account profile by emailing support@travancoregardens.com.`,
+• Right to Deletion: Request removal of your customer account profile by emailing travancoregardensonline@gmail.com.`,
         },
         {
             title: "Grievance Officer (Mandatory Compliance)",
@@ -77,7 +77,7 @@ We retain order records for the duration required by Indian accounting, tax (GST
 Name: Grievance Redressal Officer
 Entity: Travancore Gardens
 Address: Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
-Email: grievance@travancoregardens.com / support@travancoregardens.com
+Email: travancoregardensonline@gmail.com
 Working Hours: Monday to Friday, 10:00 AM – 5:00 PM IST
 
 We acknowledge grievances within 48 hours and strive to resolve any dispute within 30 days from receipt.`,

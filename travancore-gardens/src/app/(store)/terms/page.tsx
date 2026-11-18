@@ -79,8 +79,8 @@ Any legal disputes or proceedings arising out of or in connection with these ter
             title: "Customer Support & Grievance Contact",
             content: `For any queries, complaints, or legal notices concerning these Terms & Conditions, please reach out to us:
 
-📧 Official Support Email: support@travancoregardens.com
-📧 Legal Inquiries: legal@travancoregardens.in
+📧 Official Support Email: travancoregardensonline@gmail.com
+📧 Legal Inquiries: travancoregardensonline@gmail.com
 📍 Operational Address: Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572, India
 🕒 Operational Hours: Monday to Saturday, 9:00 AM – 6:00 PM IST`,
         },

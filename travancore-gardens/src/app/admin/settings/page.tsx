@@ -23,10 +23,10 @@ export default function SettingsPage() {
     // General settings local state (would be persisted to a `settings` Supabase table in a full implementation)
     const [general, setGeneral] = useState({
         storeName: "Travancore Gardens",
-        storeEmail: "hello@travancoregardens.com",
-        phone: "+91 1800 123 4567",
+        storeEmail: "travancoregardensonline@gmail.com",
+        phone: "+91 85908 09000",
         currency: "INR (₹)",
-        address: "124 Green Valley Road, Kochi, Kerala 682001",
+        address: "Ambalathinkala, Kattakkada, Thiruvananthapuram, Kerala – 695572",
         gst: "29AABCT1234M1ZV",
         freeShippingThreshold: "1500",
         defaultShippingRate: "99",

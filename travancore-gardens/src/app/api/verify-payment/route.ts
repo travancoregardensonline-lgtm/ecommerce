@@ -111,7 +111,7 @@ export async function POST(req: Request) {
             const estimatedH = Math.ceil(totalVolume / footprint);
             const finalH = Math.max(estimatedH, 20);
 
-            let guestEmail = "orders@travancoregardens.com";
+            let guestEmail = "travancoregardensonline@gmail.com";
             if (orderDB.notes) {
                 try {
                     const parsed = JSON.parse(orderDB.notes);
