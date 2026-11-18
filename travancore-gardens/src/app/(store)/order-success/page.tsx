@@ -139,32 +139,32 @@ function SuccessContent() {
         .indexOf(order?.order_status ?? "confirmed");
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 max-w-2xl text-center">
-            <div className="flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mx-auto mb-8">
-                <CheckCircle2 className="h-14 w-14 text-primary" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 md:py-24 max-w-2xl text-center">
+            <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 mx-auto mb-6">
+                <CheckCircle2 className="h-9 w-9 sm:h-11 sm:w-11 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold font-heading mb-4 tracking-tight">Order Confirmed!</h1>
-            <p className="text-lg text-muted-foreground mb-2">
+            <h1 className="text-2xl sm:text-4xl font-bold font-heading mb-3 tracking-tight">Order Confirmed!</h1>
+            <p className="text-sm sm:text-base text-muted-foreground mb-2">
                 Thank you for your purchase. Your plants are being lovingly prepared for dispatch.
             </p>
-            <p className="text-sm text-muted-foreground mb-10">
-                A confirmation email has been sent to your registered email address.
+            <p className="text-xs sm:text-sm text-muted-foreground mb-8">
+                A confirmation has been sent to your registered email address.
             </p>
 
-            <div className="bg-card border rounded-2xl p-6 text-left mb-8">
+            <div className="bg-card border rounded-2xl p-4 sm:p-6 text-left mb-8 shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                     <div>
-                        <p className="text-sm text-muted-foreground">Order ID</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">Order ID</p>
                         {isLoading
-                            ? <div className="h-6 w-32 bg-muted animate-pulse rounded mt-1" />
-                            : <p className="text-lg font-bold font-heading">#{displayNumber}</p>
+                            ? <div className="h-5 w-24 bg-muted animate-pulse rounded mt-1" />
+                            : <p className="text-base sm:text-lg font-bold font-heading">#{displayNumber}</p>
                         }
                     </div>
                     <div className="text-right">
-                        <p className="text-sm text-muted-foreground">Total Paid</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">Total Paid</p>
                         {isLoading
-                            ? <div className="h-6 w-24 bg-muted animate-pulse rounded mt-1 ml-auto" />
-                            : <p className="font-bold text-primary text-lg">₹{Number(order?.total_amount ?? 0).toLocaleString("en-IN")}</p>
+                            ? <div className="h-5 w-20 bg-muted animate-pulse rounded mt-1 ml-auto" />
+                            : <p className="font-black text-primary text-base sm:text-lg">₹{Number(order?.total_amount ?? 0).toLocaleString("en-IN")}</p>
                         }
                     </div>
                 </div>
@@ -177,15 +177,15 @@ function SuccessContent() {
                         const isActive = currentStatusIdx - 1 === stepIdx;
                         const Icon = step.icon;
                         return (
-                            <div key={step.key} className="flex-1 flex flex-col items-center gap-2">
+                            <div key={step.key} className="flex-1 flex flex-col items-center gap-1.5 sm:gap-2">
                                 <div className="flex items-center w-full">
-                                    {idx > 0 && <div className={`flex-1 h-1 ${isDone ? "bg-primary" : "bg-border"}`} />}
-                                    <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${isDone || isActive ? "bg-primary text-white" : "bg-muted text-muted-foreground border-2 border-border"}`}>
-                                        <Icon className="h-5 w-5" />
+                                    {idx > 0 && <div className={`flex-1 h-0.5 sm:h-1 ${isDone ? "bg-primary" : "bg-border"}`} />}
+                                    <div className={`h-8 w-8 sm:h-10 sm:w-10 rounded-full flex items-center justify-center shrink-0 ${isDone || isActive ? "bg-primary text-white" : "bg-muted text-muted-foreground border border-border"}`}>
+                                        <Icon className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
                                     </div>
-                                    {idx < statuses.length - 1 && <div className={`flex-1 h-1 ${isDone && !isActive ? "bg-primary" : "bg-border"}`} />}
+                                    {idx < statuses.length - 1 && <div className={`flex-1 h-0.5 sm:h-1 ${isDone && !isActive ? "bg-primary" : "bg-border"}`} />}
                                 </div>
-                                <span className={`text-xs font-medium text-center ${isDone || isActive ? "text-primary" : "text-muted-foreground"}`}>{step.label}</span>
+                                <span className={`text-[10px] sm:text-xs font-medium text-center ${isDone || isActive ? "text-primary font-semibold" : "text-muted-foreground"}`}>{step.label}</span>
                             </div>
                         );
                     })}

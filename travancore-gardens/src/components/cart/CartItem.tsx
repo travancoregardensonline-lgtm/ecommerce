@@ -21,56 +21,88 @@ interface CartItemProps {
 }
 
 export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
+    const itemTotal = item.price * item.quantity;
+
     return (
-        <div className="flex flex-col sm:flex-row gap-4 py-6 border-b border-border/50">
-            <Link href={`/product/${item.slug}`} className="relative h-24 w-24 sm:h-32 sm:w-32 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+        <div className="flex flex-row gap-3 sm:gap-4 py-4 sm:py-6 border-b border-border/60 last:border-b-0 items-start">
+            {/* Plant Image */}
+            <Link
+                href={`/product/${item.slug}`}
+                className="relative h-20 w-20 sm:h-28 sm:w-28 flex-shrink-0 rounded-xl overflow-hidden bg-muted border border-border/50 group"
+            >
                 <Image
                     src={item.imageUrl}
                     alt={item.name}
                     fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 96px, 128px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 640px) 80px, 112px"
                 />
             </Link>
-            <div className="flex flex-1 flex-col justify-between">
-                <div className="flex justify-between">
-                    <div>
-                        <Link href={`/product/${item.slug}`} className="font-semibold hover:text-primary transition-colors line-clamp-2">
+
+            {/* Plant Details */}
+            <div className="flex flex-1 flex-col justify-between min-w-0">
+                <div className="flex justify-between items-start gap-2">
+                    <div className="min-w-0 flex-1">
+                        <Link
+                            href={`/product/${item.slug}`}
+                            className="font-semibold text-xs sm:text-base text-foreground hover:text-primary transition-colors line-clamp-2 leading-tight"
+                        >
                             {item.name}
                         </Link>
                         {item.variant && (
-                            <p className="mt-1 text-sm text-muted-foreground">{item.variant}</p>
+                            <p className="mt-0.5 text-[11px] sm:text-xs text-muted-foreground font-medium">
+                                Variant: {item.variant}
+                            </p>
                         )}
+                        <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
+                            ₹{item.price.toLocaleString("en-IN")} each
+                        </p>
                     </div>
-                    <p className="font-bold ml-4">₹{(item.price * item.quantity).toFixed(2)}</p>
+
+                    <div className="text-right shrink-0">
+                        <p className="font-bold text-xs sm:text-base text-foreground">
+                            ₹{itemTotal.toLocaleString("en-IN")}
+                        </p>
+                    </div>
                 </div>
-                <div className="flex items-center justify-between mt-4">
-                    <div className="flex items-center border rounded-md h-9">
+
+                {/* Actions: Stepper + Remove */}
+                <div className="flex items-center justify-between mt-3 gap-2">
+                    {/* Compact Quantity Stepper */}
+                    <div className="flex items-center border border-input rounded-lg h-8 sm:h-9 bg-background select-none">
                         <button
+                            type="button"
                             onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                            className="px-3 h-full flex items-center justify-center hover:bg-muted text-muted-foreground transition-colors disabled:opacity-50"
+                            className="px-2.5 h-full flex items-center justify-center hover:bg-muted text-muted-foreground transition-colors disabled:opacity-40 active:scale-95 touch-manipulation"
                             disabled={item.quantity <= 1}
                             aria-label="Decrease quantity"
                         >
                             <Minus className="h-3 w-3" />
                         </button>
-                        <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                        <span className="w-7 text-center text-xs sm:text-sm font-bold text-foreground">
+                            {item.quantity}
+                        </span>
                         <button
+                            type="button"
                             onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                            className="px-3 h-full flex items-center justify-center hover:bg-muted text-muted-foreground transition-colors"
+                            className="px-2.5 h-full flex items-center justify-center hover:bg-muted text-muted-foreground transition-colors active:scale-95 touch-manipulation"
                             aria-label="Increase quantity"
                         >
                             <Plus className="h-3 w-3" />
                         </button>
                     </div>
+
+                    {/* Delete button */}
                     <Button
+                        type="button"
                         variant="ghost"
                         size="sm"
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="h-8 px-2 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 active:scale-95 transition-all"
                         onClick={() => onRemove(item.id)}
+                        aria-label={`Remove ${item.name} from cart`}
                     >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Remove
+                        <Trash2 className="h-3.5 w-3.5 sm:mr-1.5" />
+                        <span className="hidden sm:inline">Remove</span>
                     </Button>
                 </div>
             </div>

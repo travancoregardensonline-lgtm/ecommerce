@@ -85,32 +85,33 @@ function ShopContent() {
     };
 
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="container mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-12 pb-24 md:pb-12">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-8 border-b gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 pb-6 sm:pb-8 border-b gap-4">
                 <div>
-                    <h1 className="text-4xl font-bold tracking-tight text-foreground font-heading">
+                    <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground font-heading">
                         {activeCategory?.name ?? (selectedCategory ? decodeURIComponent(selectedCategory) : "Shop All Plants")}
                     </h1>
-                    <p className="text-muted-foreground mt-2">
-                        {isLoading ? "Loading…" : `${data?.total ?? 0} products found`}
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                        {isLoading ? "Loading…" : `${data?.total ?? 0} plants available`}
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <div className="relative">
+                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                    <div className="relative flex-1 sm:flex-initial">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search plants…"
-                            className="pl-9 w-48 sm:w-64"
+                            className="pl-9 w-full sm:w-64 h-10 text-xs sm:text-sm rounded-xl"
                             value={search}
                             onChange={e => { setSearch(e.target.value); setPage(1); }}
                         />
                     </div>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="gap-2 shrink-0">
-                                <SlidersHorizontal className="h-4 w-4" />
-                                {sortLabels[sort]}
+                            <Button variant="outline" className="gap-2 shrink-0 h-10 rounded-xl text-xs sm:text-sm">
+                                <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline">{sortLabels[sort]}</span>
+                                <span className="sm:hidden">Sort</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[200px]">

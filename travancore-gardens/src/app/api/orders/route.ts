@@ -33,6 +33,7 @@ export async function POST(request: Request) {
             items,
             address,         // { full_name, phone, email, address_line1, address_line2, city, state, pincode }
             address_id,      // optional existing address ID (for logged-in users)
+            user_id: bodyUserId,
             total_amount,
             shipping_cost = 0,
             discount_amount = 0,
@@ -41,6 +42,8 @@ export async function POST(request: Request) {
             payment_method = "card",
             notes = null,
         } = body;
+
+        const finalUserId = userId || bodyUserId || null;
 
         // Validation
         if (!items?.length || total_amount === undefined) {
@@ -53,7 +56,7 @@ export async function POST(request: Request) {
             const { data: newAddr, error: addrErr } = await supabaseAdmin
                 .from("addresses")
                 .insert({
-                    user_id: userId,
+                    user_id: finalUserId,
                     full_name: address.full_name?.trim() || "Customer",
                     name: address.full_name?.trim() || "Customer",
                     phone: address.phone?.trim() || "",
@@ -95,7 +98,7 @@ export async function POST(request: Request) {
             .from("orders")
             .insert({
                 order_number: orderNumber,
-                user_id: userId,
+                user_id: finalUserId,
                 address_id: resolvedAddressId,
                 total_amount,
                 shipping_cost,

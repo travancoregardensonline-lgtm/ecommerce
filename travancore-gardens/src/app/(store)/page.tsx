@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ProductCard, Product } from "@/components/store/ProductCard";
 import { CategoryCard } from "@/components/store/CategoryCard";
-import { ArrowRight, Leaf, Truck, Loader2, Star, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Leaf, Truck, Loader2, Star, ChevronRight, CheckCircle2, MapPin, Flower2 } from "lucide-react";
 import { useCategories, useFeaturedProducts, useBanners } from "@/hooks/useSupabase";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -128,28 +128,54 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Trust Line & Stats */}
-      <section className="py-20 relative z-10 -mt-10">
+      {/* Highlights Bento Deck */}
+      <section className="relative z-20 -mt-10 sm:-mt-14 mb-4">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center bg-white dark:bg-zinc-900 shadow-2xl rounded-[3rem] p-12 md:p-16 border border-zinc-100 dark:border-zinc-800">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { icon: Leaf, title: "Nature's Best", desc: "Every plant is hand-selected and carefully nurtured." },
-              { icon: Truck, title: "Eco Shipping", desc: "Sustainable protective packaging for safe transit." },
-              { icon: Star, title: "Botanical Quality", desc: "Nursery-grown plants potted in nutrient-rich organic soil." },
+              {
+                icon: MapPin,
+                tag: "Kerala Origin",
+                title: "Direct Nursery",
+                desc: "Grown and dispatched directly from our nursery in Kattakkada to your doorstep.",
+              },
+              {
+                icon: Truck,
+                tag: "Pan-India",
+                title: "Protected Transit",
+                desc: "Reinforced corrugated packaging engineered for live plant transport.",
+              },
+              {
+                icon: Flower2,
+                tag: "70+ Varieties",
+                title: "Curated Selection",
+                desc: "Exotic creepers, fragrant roses, fruiting plants, and tropical garden flora.",
+              },
             ].map((f, i) => (
               <motion.div
                 key={f.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center group"
+                transition={{ delay: i * 0.1, duration: 0.4 }}
+                className="group relative bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800 rounded-3xl p-7 shadow-lg shadow-zinc-900/5 hover:shadow-xl hover:border-primary/40 dark:hover:border-primary/40 transition-all duration-300 flex flex-col justify-between"
               >
-                <div className="h-16 w-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-all duration-500 transform group-hover:rotate-6">
-                  <f.icon className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
+                <div className="flex items-center justify-between mb-5">
+                  <div className="h-12 w-12 rounded-2xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary group-hover:scale-105 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                    <f.icon className="h-6 w-6 transition-colors" />
+                  </div>
+                  <span className="text-[10px] font-bold tracking-widest uppercase text-primary/80 bg-primary/5 dark:bg-primary/10 border border-primary/15 px-3 py-1 rounded-full">
+                    {f.tag}
+                  </span>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-zinc-900 dark:text-white uppercase tracking-tight">{f.title}</h3>
-                <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-[250px]">{f.desc}</p>
+                <div>
+                  <h3 className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight mb-1.5 group-hover:text-primary transition-colors">
+                    {f.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                    {f.desc}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
